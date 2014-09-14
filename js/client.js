@@ -113,6 +113,9 @@ var MapViewClass = Backbone.View.extend({
         newoverlay.setOpacity(0.6);
         google.maps.event.addListener(newoverlay,'click',self.mapClicked);
 
+        self.imagebounds.extend(markerpos);
+        self.map.fitBounds(self.imagebounds);
+
         self.hideClimateOverlays();
         self.climateoverlays[year] = newoverlay;
         self.showClimateOverlay(year);
