@@ -139,9 +139,9 @@ var MapViewClass = Backbone.View.extend({
 
     var img_data_url;
     if(self.question=='goingto')
-      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/2007/2017/'+year+'/'+(parseInt(year,10)+20).toString()+'/6,7,8,12,1,2';
+      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/2007/2017/'+year+'/'+(parseInt(year,10)+10).toString()+'/6,7,8,12,1,2';
     else
-      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/'+year+'/'+(parseInt(year,10)+20).toString()+'/2007/2017/6,7,8,12,1,2';
+      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/'+year+'/'+(parseInt(year,10)+10).toString()+'/2007/2017/6,7,8,12,1,2';
 
     $.getJSON(img_data_url, [], function(data){
       var img_url = '/imgget/'+data.img;

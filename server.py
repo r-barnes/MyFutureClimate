@@ -314,6 +314,7 @@ class ServerRoot():
       return json.loads(cached)
 
     compendyear = min(compendyear,2100)
+    refendyear  = min(refendyear,2100)
 
     months = map(int,months.split(','))
 
