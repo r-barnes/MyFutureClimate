@@ -19,6 +19,7 @@ import magic         #For file names
 import datetime
 import time
 import json          #For talking to server
+import hashlib       #For Redis
 
 #import code #For debugging with: code.interact(local=locals())
 
@@ -222,7 +223,11 @@ class ServerRoot():
   def _setCachedResponse(self, string, key=False):
     if not key:
       key = cherrypy.url()
-    return self.setCached(key, string)
+    key = hashlib.md5(key).hexdigest()
+
+    self.setCached(key, string)
+
+    return key
 
   def _getSingleTimeGrid(self, grid, year, month):
     cached = self._getCachedResponse()
