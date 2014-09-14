@@ -15,7 +15,6 @@ import inspect       #For gettting the server root directory
 import os            #For gettting the server root directory
 import bisect        #For finding where lat/lon are in a sorted list
 import itertools     #For mashing years with months
-import magic         #For file names
 import datetime
 import time
 import json          #For talking to server
