@@ -229,48 +229,6 @@ class ServerRoot():
 
     return key
 
-  def _getSingleTimeGrid(self, grid, year, month):
-    cached = self._getCachedResponse()
-    if cached:
-      return cached
-
-    img = grid.getGridByTime(year, month)
-    img = self._gridToImage(img)
-    img = self.img2buffer(img)
-    self._setCachedResponse(img.getvalue())
-    return img
-
-  @cherrypy.expose
-  def tempgrid(self, year, month):
-    return self._getSingleTimeGrid(self.temp, year, month)
-
-  @cherrypy.expose
-  def prcpgrid(self, year, month):
-    return self._getSingleTimeGrid(self.prcp, year, month)
-
-  def _getMeanTimeGrid(self, grid, startyear, startmonth, endyear, endmonth):
-    cached = self._getCachedResponse()
-    if cached:
-      return cached
-
-    img = grid.meanVals(startyear, startmonth, endyear, endmonth)
-    img = self._gridToImage(img)
-    img = self.img2buffer(img)
-    self._setCachedResponse(img.getvalue())
-    return img
-
-  @cherrypy.expose
-  def tempmean(self, startyear, startmonth, endyear, endmonth):
-    return self._getMeanTimeGrid(self.temp, startyear, startmonth, endyear, endmonth)
-
-  @cherrypy.expose
-  def prcpmean(self, startyear, startmonth, endyear, endmonth):
-    return self._getMeanTimeGrid(self.prcp, startyear, startmonth, endyear, endmonth)
-
-  def gridCutValuesAbove(self, grid, upper_cut):
-    grid[grid>upper_cut] = np.NaN
-    return grid
-
   def genSimGrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
     accum = np.zeros(self.temp.data.shape[1:]) #TODO: Abstract this somehow
     for m in months:
