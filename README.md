@@ -7,6 +7,14 @@ climate is to every other location. The location of this "climate analog" can
 then be tracked forward and backward through time.
 
 
+TODO
+===============
+ * Add year indicator to display
+ * Make display mobile friendly
+ * Separate server map generation code into a separate Python script
+ * Write a new server in Node.js to serve up the images produced by the above
+
+
 Getting Started
 ===============
 
@@ -17,3 +25,15 @@ the environment you'll need to run our code.
     pip install cherrypy==3.3.0
     pip install python-magic
     apt-get install nginx
+
+
+Data Sources
+============
+
+Data can be viewed [here](ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/).
+
+Download links:
+
+    ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/BCSD/miroc5/rcp45/mon/r1i1p1/tas/BCSD_0.5deg_tas_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc
+
+    ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/BCSD/miroc5/rcp45/mon/r1i1p1/pr/BCSD_0.5deg_pr_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc
