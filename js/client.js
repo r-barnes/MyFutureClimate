@@ -17,8 +17,9 @@ var MapViewClass = Backbone.View.extend({
   el: '#mapview',
 
   events: {
-    'change #year': 'yearChangedEvent',
-    'input #year':  'yearDrag'
+    'change #year':   'yearChangedEvent',
+    'input #year':    'yearDrag',
+    'click #switchq': 'switchQuestion'
   },
 
   initialize: function(){
@@ -68,6 +69,24 @@ var MapViewClass = Backbone.View.extend({
         console.log('Could not get geolocation.');
       });
     }
+
+    self.question = 'goingto';
+  },
+
+  switchQuestion: function(){
+    var self = this;
+
+    if(self.question=='goingto'){
+      $('#goingto').hide();
+      $('#comingfrom').show();
+      $('#switchq').html('Coming From');
+      self.question = 'comingfrom';
+    } else {
+      $('#goingto').show();
+      $('#comingfrom').hide();
+      $('#switchq').html('Going To');
+      self.question = 'goingto';
+    }
   },
 
   mapClicked: function(event){
@@ -77,12 +96,12 @@ var MapViewClass = Backbone.View.extend({
 
   yearDrag: function(event){
     var year = $('#year').val();
-    $('#yearshow').html(year);
+    $('.yearshow').html(year);
   },
 
   yearChanged: function(event){
     var year = $('#year').val();
-    $('#yearshow').html(year);
+    $('.yearshow').html(year);
     this.setMapGrid(year);
   },
 
@@ -99,19 +118,26 @@ var MapViewClass = Backbone.View.extend({
     var self = this;
     console.log(year);
 
-    if(typeof(self.climateoverlays[year])!=='undefined'){
+/*    if(typeof(self.climateoverlays[year])!=='undefined'){
       self.hideClimateOverlays();
       self.showClimateOverlay(year);
       return;
     }
-
+*/
     var markerpos = this.click_marker.getPosition();
     var lat       = markerpos.lat();
     var lon       = markerpos.lng();
 
     vent.trigger('thinking');
 
-    var img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/2007/2017/'+year+'/'+(parseInt(year,10)+20).toString()+'/6,7,8,12,1,2';
+    var img_data_url;
+    if(self.question=='goingto')
+      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/2007/2017/'+year+'/'+(parseInt(year,10)+20).toString()+'/6,7,8,12,1,2';
+    else
+      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/'+year+'/'+(parseInt(year,10)+20).toString()+'/2007/2017/6,7,8,12,1,2';
+
+    console.log(img_data_url,lat,lon);
+
     $.getJSON(img_data_url, [], function(data){
       console.log(data);
       var img_url = '/imgget/'+data.img;
