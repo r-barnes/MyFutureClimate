@@ -248,7 +248,7 @@ class ServerRoot():
     print 'similarity max',np.nanmax(accum)
 
     #Make portions of the map which are not like this climate transparent
-    accum[accum>3] = np.NaN
+    accum[accum>2] = np.NaN
 
     #TODO: Used to shift Global 0.5 degree grid so that the first data point is
     #-180 degrees. This ensures appropriate centering in Google Maps.
@@ -296,6 +296,8 @@ class ServerRoot():
   @cherrypy.expose
   @cherrypy.tools.json_out()
   def simgrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
+    print "Entering simgrid"
+
     lat = float(lat)
     lon = float(lon)
     if lon<0:
@@ -310,8 +312,10 @@ class ServerRoot():
     cached = redisclient.get('pos-'+key)
     print cached
     if cached:
+      print "Found cached image data."
       return json.loads(cached)
 
+    print "Building new image"
     compendyear = min(compendyear,2100)
     refendyear  = min(refendyear,2100)
 
@@ -319,6 +323,7 @@ class ServerRoot():
 
     accum = self.genSimGrid(lat, lon, refstartyear, refendyear, compstartyear, compendyear, months)
 
+    print "Trimming"
     accum = self._trimGrid(accum)
 
     pos = json.dumps({'img':key, 'sw':accum[1], 'ne':accum[2]})
