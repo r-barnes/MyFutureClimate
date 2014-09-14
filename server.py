@@ -272,6 +272,11 @@ class ServerRoot():
     lons = self.temp.lon
     lons = np.roll(lons,360)
 
+    print lastrow,lastcol
+    lastrow = min(lastrow,len(self.temp.lat)-1)
+    lastcol = min(lastcol,len(lons)-1)
+    print lastrow,lastcol
+
     sw = [float(self.temp.lat[firstrow]), float(lons[firstcol])]
     ne = [float(self.temp.lat[lastrow]), float(lons[lastcol])]
 
