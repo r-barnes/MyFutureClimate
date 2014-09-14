@@ -123,8 +123,8 @@ var MapViewClass = Backbone.View.extend({
 
   setMapGrid: function(year){
     var self = this;
-    console.log(year);
 
+//Deprecated client-side caching
 /*    if(typeof(self.climateoverlays[year])!=='undefined'){
       self.hideClimateOverlays();
       self.showClimateOverlay(year);
@@ -143,10 +143,7 @@ var MapViewClass = Backbone.View.extend({
     else
       img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/'+year+'/'+(parseInt(year,10)+20).toString()+'/2007/2017/6,7,8,12,1,2';
 
-    console.log(img_data_url,lat,lon);
-
     $.getJSON(img_data_url, [], function(data){
-      console.log(data);
       var img_url = '/imgget/'+data.img;
       var img     = new Image();
       img.src = img_url;
@@ -162,8 +159,6 @@ var MapViewClass = Backbone.View.extend({
 
 
       img.addEventListener('load', function(){
-        console.log('Image loaded.');
-
         var newoverlay = new google.maps.GroundOverlay(img_url, self.imagebounds);
         newoverlay.setOpacity(0.6);
         google.maps.event.addListener(newoverlay,'click',self.mapClicked);
