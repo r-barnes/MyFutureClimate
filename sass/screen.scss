@@ -114,10 +114,23 @@ THINKING SPINNER
   top:      0;
   left:     0;
   width:    100%;
-  height:   500px;
+  height:   100%;
 }
 
 #map-canvas{
   width:  100%;
   height: 100%;
+}
+
+#footer {
+  position:         fixed;
+  bottom:           0;
+  height:           75px;
+  left:             0;
+  width:            100%;
+  background-color: rgba(0,0,255,0.5);
+}
+
+#thequestion {
+  font-size:  20pt;
 }

@@ -5,7 +5,8 @@ var MapViewClass = Backbone.View.extend({
   el: '#mapview',
 
   events: {
-    'change #year': 'yearChangedEvent'
+    'change #year': 'yearChangedEvent',
+    'input #year':  'yearDrag'
   },
 
   initialize: function(){
@@ -52,8 +53,15 @@ var MapViewClass = Backbone.View.extend({
     this.click_marker.setVisible(true);
   },
 
+  yearDrag: function(event){
+    var year = $('#year').val();
+    $('#yearshow').html(year);
+  },
+
   yearChanged: function(event){
-    this.setMapGrid($('#year').val());
+    var year = $('#year').val();
+    $('#yearshow').html(year);
+    this.setMapGrid(year);
   },
 
   hideClimateOverlays: function(){
