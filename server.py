@@ -226,11 +226,12 @@ class ServerRoot():
 
     #TODO: Used to shift Global 0.5 degree grid so that the first data point is
     #-180 degrees. This ensures appropriate centering in Google Maps.
-    #accum = np.roll(accum,360,axis=1)
 
     return accum
 
   def _trimGrid(self, grid):
+    grid = np.roll(grid,360,axis=1)
+
     nans    = np.isnan(grid)
     nancols = np.all(nans, axis=0)
     nanrows = np.all(nans, axis=1)
@@ -241,8 +242,11 @@ class ServerRoot():
     lastcol = len(nancols) - nancols[::-1].argmin() # Last index where not NAN
     lastrow = len(nanrows) - nanrows[::-1].argmin() #
 
-    sw = [float(self.temp.lat[firstrow]), float(self.temp.lon[firstcol])]
-    ne = [float(self.temp.lat[lastrow]), float(self.temp.lon[lastcol])]
+    lons = self.temp.lon
+    lons = np.roll(lons,360)
+
+    sw = [float(self.temp.lat[firstrow]), float(lons[firstcol])]
+    ne = [float(self.temp.lat[lastrow]), float(lons[lastcol])]
 
     return (grid[firstrow:lastrow,firstcol:lastcol],sw,ne)
 
