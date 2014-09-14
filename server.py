@@ -20,6 +20,7 @@ import datetime
 import time
 import json          #For talking to server
 import hashlib       #For Redis
+import cPickle       #Used for stashing Numpy arrays
 
 #import code #For debugging with: code.interact(local=locals())
 
@@ -85,17 +86,41 @@ class ClimateGrid():
     return binaryfind(self.time, days)
 
   def meanVals(self, startyear, endyear, months):
+    key = 'meanVals-' + self.filename + '-' + str(startyear)+':'+str(endyear)+':'+str(months)
+    key = hashlib.md5(key).hexdigest()
+
+    cached = redisclient.get(key)
+    if cached:
+      print "Loading cached meanVals"
+      return cPickle.loads(cached)
+
     times             = self.yearMonthsToTimes(startyear, endyear, months)
     tgrid             = self.data[times]
     tgrid[tgrid>1e15] = np.nan
     avg_grid          = np.mean(tgrid, axis=0)
+
+    to_cache = cPickle.dumps(avg_grid)
+    redisclient.set(key,to_cache)
+
     return avg_grid
 
   def stdVals(self, startyear, endyear, months):
+    key = 'stdVals-' + self.filename + '-' + str(startyear)+':'+str(endyear)+':'+str(months)
+    key = hashlib.md5(key).hexdigest()
+
+    cached = redisclient.get(key)
+    if cached:
+      print "Loading cached stdVal"
+      return cPickle.loads(cached)
+
     times             = self.yearMonthsToTimes(startyear, endyear, months)
     tgrid             = self.data[times]
     tgrid[tgrid>1e15] = np.nan
     std_grid          = np.std(tgrid, axis=0)
+
+    to_cache = cPickle.dumps(std_grid)
+    redisclient.set(key,to_cache)
+
     return std_grid
 
   def timeSeries(self, lat, lon):
@@ -107,11 +132,12 @@ class ClimateGrid():
 class NetCDFClimateGrid(ClimateGrid):
   def __init__(self, filename, varname):
     ClimateGrid.__init__(self)
-    self.fin  = netcdf.netcdf_file(filename,'r')
-    self.data = self.fin.variables[varname]
-    self.lat  = self.fin.variables['latitude'][:]
-    self.lon  = self.fin.variables['longitude'][:]
-    self.time = self.fin.variables['time'][:]
+    self.filename = filename
+    self.fin      = netcdf.netcdf_file(filename,'r')
+    self.data     = self.fin.variables[varname]
+    self.lat      = self.fin.variables['latitude'][:]
+    self.lon      = self.fin.variables['longitude'][:]
+    self.time     = self.fin.variables['time'][:]
 
   def varNames(self):
     return self.fin.variables
@@ -128,11 +154,12 @@ class NetCDFClimateGrid(ClimateGrid):
 class HDFClimateGrid(ClimateGrid):
   def __init__(self, filename, varname):
     ClimateGrid.__init__(self)
-    self.fin  = h5py.File(filename,'r')
-    self.data = self.fin[varname]
-    self.lat  = self.fin['latitude'][:]
-    self.lon  = self.fin['longitude'][:]
-    self.time = self.fin['time'][:]
+    self.filename = filename
+    self.fin      = h5py.File(filename,'r')
+    self.data     = self.fin[varname]
+    self.lat      = self.fin['latitude'][:]
+    self.lon      = self.fin['longitude'][:]
+    self.time     = self.fin['time'][:]
 
   def varNames(self):
     return self.fin.keys()
