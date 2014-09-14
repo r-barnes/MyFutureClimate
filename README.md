@@ -21,9 +21,10 @@ Getting Started
 You'll need some basic things to get started. The follow commands will install
 the environment you'll need to run our code.
 
-    apt-get install python-scipy python-h5py python-matplotlib python-redis redis-server python-pip python-routes
+    apt-get install python-scipy python-h5py python-matplotlib python-redis redis-server python-pip python-routes libhdf5-dev
     pip install cherrypy==3.3.0
     pip install python-magic
+    pip install h5py
     apt-get install nginx
 
 
