@@ -185,12 +185,6 @@ class ServerRoot():
     output.seek(0)
     return output
 
-  def setCached(self, key, val):
-    redisclient.set(key,val)
-
-  def _cacheBuffer(self, gridname, img):
-    self.setCached(gridname, img.getvalue())
-
   def _gridToImage(self, grid):
     #Get a copy of the grid related to this time. TODO: Try not to make a copy
     grid            = grid.copy()
