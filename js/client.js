@@ -1,6 +1,18 @@
 var vent = {}; // or App.vent depending how you want to do this
 _.extend(vent, Backbone.Events);
 
+var TourClass = Backbone.View.extend({
+  el: '#tourview',
+
+  events: {
+    'click #closetour': 'closeTour'
+  },
+
+  closeTour: function(){
+    this.remove();
+  }
+});
+
 var MapViewClass = Backbone.View.extend({
   el: '#mapview',
 
@@ -135,7 +147,8 @@ var MapViewClass = Backbone.View.extend({
   }
 });
 
-var MapView       = new MapViewClass();
+var MapView  = new MapViewClass();
+var TourView = new TourClass();
 
 vent.on('thinking', function(){
   $('#thinkingbox').show();

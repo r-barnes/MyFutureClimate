@@ -6,7 +6,6 @@
   <script type="text/javascript" src="js/lib/jquery.debounce.js"></script>
   <script type="text/javascript" src="js/lib/underscore.min.js"></script>
   <script type="text/javascript" src="js/lib/backbone.min.js"></script>
-  <script type="text/javascript" src="js/lib/d3.min.js" defer></script>
   <script type="text/javascript" src="js/client.js" defer></script>
   <link rel="stylesheet" href="stylesheets/screen.css">
 
@@ -17,6 +16,21 @@
 <body>
   <div id="thinkingbox">
     <img class="thinking-spinner" src="img/thinking.png">
+  </div>
+  <div id="tourview">
+    <h1>About</h1>
+    <p>Where will your home's climate be in the future?</p>
+    <p>What current climate will be your home's future climate?</p>
+    <p>To find out:</p>
+    <ol>
+      <li>Drag the pin to your home.</li>
+      <li>Drag the bottom slider to a year.</li>
+    </ol>
+    <p>The colors tell you how much the future climate is like your current climate:</p>
+    <div style="text-align:center">Like Home <img style="vertical-align:middle" src="/img/colorscale.png"> Unlike Home</div>
+    <p>Areas without color are completely unlike your current climate.</p>
+    <p>More details are available <a href="about.html">here</a>.</p>
+    <p><button id="closetour" style="font-size:30pt">Okay!</button></p>
   </div>
   <div id="mapview">
     <div id="map-canvas"></div>
