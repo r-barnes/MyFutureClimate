@@ -153,11 +153,11 @@ class ServerRoot():
       'tools.staticdir.index': 'index.html'
     }
 
-    self.temp = HDFClimateGrid('data/BCSD_0.125deg_tas_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'tas')
-    self.prcp = HDFClimateGrid('data/BCSD_0.125deg_pr_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'pr')
+    self.temp = HDFClimateGrid('../data/BCSD_0.5deg_tas_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'tas')
+    self.prcp = HDFClimateGrid('../data/BCSD_0.5deg_pr_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'pr')
 
     self.data = {}
-    for fname in glob.glob('data/BCSD*nc'):
+    for fname in glob.glob('../data/BCSD*nc'):
       fnameparts = fname.split('_')
       variable   = fnameparts[2]
       model      = fnameparts[4]
