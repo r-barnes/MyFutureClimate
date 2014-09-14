@@ -209,15 +209,6 @@ class ServerRoot():
 
     return grid
 
-  def _setCachedResponse(self, string, key=False):
-    if not key:
-      key = cherrypy.url()
-    key = hashlib.md5(key).hexdigest()
-
-    self.setCached(key, string)
-
-    return key
-
   def genSimGrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
     accum = np.zeros(self.temp.data.shape[1:]) #TODO: Abstract this somehow
     for m in months:
