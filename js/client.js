@@ -75,6 +75,7 @@ var MapViewClass = Backbone.View.extend({
   },
 
   fitZoom: function(){
+    var self = this;
     if(self.imagebounds)
       self.map.fitBounds(self.imagebounds);
   },
