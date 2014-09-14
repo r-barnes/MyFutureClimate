@@ -1,0 +1,2 @@
+#!/bin/bash
+python -mscss <sass/screen.scss 2>/dev/null > stylesheets/screen.css
