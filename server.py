@@ -130,7 +130,7 @@ class HDFClimateGrid(ClimateGrid):
     self.fin  = h5py.File(filename,'r')
     self.data = self.fin[varname]
     self.lat  = self.fin['latitude'][:]
-    self.lon  = -(360-self.fin['longitude'][:]) #Convert from degrees East [0, 360)
+    self.lon  = self.fin['longitude'][:]
     self.time = self.fin['time'][:]
 
   def varNames(self):
@@ -267,18 +267,15 @@ class ServerRoot():
     return grid
 
   def genSimGrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
-    mpls={'lat':44.9833, 'lon':-93.2667}
-    mpls={'lat':lat,'lon':lon}
-
     accum = np.zeros(self.temp.data.shape[1:]) #TODO: Abstract this somehow
     for m in months:
-      temp_ref_mean = self.temp.pointMean(mpls['lat'], mpls['lon'], refstartyear, refendyear, [m]) #Units are degC
+      temp_ref_mean = self.temp.pointMean(lat, lon, refstartyear, refendyear, [m]) #Units are degC
       temp_mean     = self.temp.meanVals(compstartyear, compendyear, [m])
       temp_std      = self.temp.stdVals (refstartyear,  refendyear,  [m])
       accum        += np.power(np.divide(temp_mean-temp_ref_mean,temp_std),2.0)
 
     for m in months:
-      prcp_ref_mean = self.prcp.pointMean(mpls['lat'], mpls['lon'], refstartyear, refendyear, [m]) #Units are mm/d
+      prcp_ref_mean = self.prcp.pointMean(lat, lon, refstartyear, refendyear, [m]) #Units are mm/d
       prcp_mean     = self.prcp.meanVals(compstartyear, compendyear, [m])
       prcp_std      = self.prcp.stdVals (refstartyear,  refendyear,  [m])
       accum        += np.power(np.divide(prcp_mean-prcp_ref_mean,prcp_std),2.0)
@@ -301,6 +298,9 @@ class ServerRoot():
     cached = self._getCachedResponse()
     if cached:
       return cached
+
+    if lon<0:
+      lon = 360-lon
 
     months = map(int,months.split(','))
 
