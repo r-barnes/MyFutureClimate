@@ -153,11 +153,11 @@ class ServerRoot():
       'tools.staticdir.index': 'index.html'
     }
 
-    self.temp = HDFClimateGrid('../data/BCSD_0.5deg_tas_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'tas')
-    self.prcp = HDFClimateGrid('../data/BCSD_0.5deg_pr_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'pr')
+    self.temp = HDFClimateGrid('data/BCSD_0.5deg_tas_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'tas')
+    self.prcp = HDFClimateGrid('data/BCSD_0.5deg_pr_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'pr')
 
     self.data = {}
-    for fname in glob.glob('../data/BCSD*nc'):
+    for fname in glob.glob('data/BCSD*nc'):
       fnameparts = fname.split('_')
       variable   = fnameparts[2]
       model      = fnameparts[4]
@@ -285,8 +285,14 @@ class ServerRoot():
 
     accum = np.sqrt(accum)
     #accum = np.log (accum)
-    accum[accum>2] = np.NaN
     print 'similarity max',np.nanmax(accum)
+
+    #Make portions of the map which are not like this climate transparent
+    accum[accum>2] = np.NaN
+
+    #TODO: Used to shift Global 0.5 degree grid so that the first data point is
+    #-180 degrees. This ensures appropriate centering in Google Maps.
+    accum = np.roll(accum,360,axis=1)
 
     return accum
 
