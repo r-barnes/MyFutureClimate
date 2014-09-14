@@ -58,6 +58,16 @@ var MapViewClass = Backbone.View.extend({
     this.climateoverlays = {};
 
     this.yearChangedEvent = $.debounce(self.yearChanged, 500);
+
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+        self.click_marker.setPosition(initialLocation);
+        self.map.setCenter(initialLocation);
+      }, function() {
+        console.log('Could not get geolocation.');
+      });
+    }
   },
 
   mapClicked: function(event){
