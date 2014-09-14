@@ -290,7 +290,7 @@ class ServerRoot():
     print 'similarity max',np.nanmax(accum)
 
     #Make portions of the map which are not like this climate transparent
-    accum[accum>2] = np.NaN
+    accum[accum>3] = np.NaN
 
     #TODO: Used to shift Global 0.5 degree grid so that the first data point is
     #-180 degrees. This ensures appropriate centering in Google Maps.
