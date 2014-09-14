@@ -87,23 +87,38 @@ var MapViewClass = Backbone.View.extend({
     var lat       = markerpos.lat();
     var lon       = markerpos.lng();
 
-    var img     = new Image();
-    var img_url = '/showgrid/simgrid/'+lat+'/'+lon+'/2007/2017/'+year+'/'+(parseInt(year,10)+20).toString()+'/6,7,8,12,1,2';
-    img.src = img_url;
-
     vent.trigger('thinking');
 
-    img.addEventListener('load', function(){
-      console.log('Image loaded.');
-      var newoverlay = new google.maps.GroundOverlay(img_url, self.climatebounds);
-      newoverlay.setOpacity(0.6);
-      google.maps.event.addListener(newoverlay,'click',self.mapClicked);
+    var img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/2007/2017/'+year+'/'+(parseInt(year,10)+20).toString()+'/6,7,8,12,1,2';
+    $.getJSON(img_data_url, [], function(data){
+      console.log(data);
+      var img_url = '/imgget/'+data.img;
+      var img     = new Image();
+      img.src = img_url;
 
-      self.hideClimateOverlays();
-      self.climateoverlays[year] = newoverlay;
-      self.showClimateOverlay(year);
+      if(data.sw[1]>180)
+        data.sw[1] = data.sw[1]-360
+      if(data.ne[1]>180)
+        data.ne[1] = data.ne[1]-360
 
-      vent.trigger('donethinking');
+      self.imagebounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(data.sw[0], data.sw[1]),  //SW
+          new google.maps.LatLng(data.ne[0], data.ne[1])); //NE
+
+
+      img.addEventListener('load', function(){
+        console.log('Image loaded.');
+
+        var newoverlay = new google.maps.GroundOverlay(img_url, self.imagebounds);
+        newoverlay.setOpacity(0.6);
+        google.maps.event.addListener(newoverlay,'click',self.mapClicked);
+
+        self.hideClimateOverlays();
+        self.climateoverlays[year] = newoverlay;
+        self.showClimateOverlay(year);
+
+        vent.trigger('donethinking');
+      });
     });
     //var newoverlay = new google.maps.GroundOverlay('/showgrid/prcpgrid/'+year+'/3', setMapGrid.climatebounds);
     //var newoverlay = new google.maps.GroundOverlay('/showgrid/prcpmean/'+year+'/3/'+(parseInt(year,10)+1).toString()+'/3', setMapGrid.climatebounds);

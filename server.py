@@ -185,9 +185,6 @@ class ServerRoot():
     output.seek(0)
     return output
 
-  def getCached(self, key):
-    return redisclient.get(key)
-
   def setCached(self, key, val):
     redisclient.set(key,val)
 
@@ -211,14 +208,6 @@ class ServerRoot():
     grid.putalpha(mask)
 
     return grid
-
-  def _getCachedResponse(self):
-    cached = self.getCached(cherrypy.url())
-    if cached:
-      cached = self.stringAsBuffer(cached)
-      cached = self.bufferAsPNGFile(cached)
-
-    return cached
 
   def _setCachedResponse(self, string, key=False):
     if not key:
@@ -252,7 +241,7 @@ class ServerRoot():
 
     #TODO: Used to shift Global 0.5 degree grid so that the first data point is
     #-180 degrees. This ensures appropriate centering in Google Maps.
-    accum = np.roll(accum,360,axis=1)
+    #accum = np.roll(accum,360,axis=1)
 
     return accum
 
@@ -267,21 +256,39 @@ class ServerRoot():
     lastcol = len(nancols) - nancols[::-1].argmin() # Last index where not NAN
     lastrow = len(nanrows) - nanrows[::-1].argmin() #
 
-    sw = [self.temp.lat[lastrow], self.temp.lon[firstcol]]
-    ne = [self.temp.lat[firstrow], self.temp.lon[lastcol]]
+    sw = [float(self.temp.lat[firstrow]), float(self.temp.lon[firstcol])]
+    ne = [float(self.temp.lat[lastrow]), float(self.temp.lon[lastcol])]
 
     return (grid[firstrow:lastrow,firstcol:lastcol],sw,ne)
 
   @cherrypy.expose
-  def simgrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
-    cached = self._getCachedResponse()
+  def imgget(self, key):
+    cached = redisclient.get(key+'-img')
     if cached:
+      cached = self.stringAsBuffer(cached)
+      cached = self.bufferAsPNGFile(cached)
       return cached
+    else:
+      cherrypy.response.status = 404
+      cherrypy.response.body = ''
+      return
+
+  @cherrypy.expose
+  @cherrypy.tools.json_out()
+  def simgrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
+    lat = round(float(lat),1)
+    lon = round(float(lon),1)
+
+    key = (lat, lon, refstartyear, refendyear, compstartyear, compendyear, months)
+    key = hashlib.md5(json.dumps(key)).hexdigest()
+
+    print key
+    cached = redisclient.get(key)
+    print cached
+    if cached:
+      return json.loads(cached)
 
     compendyear = min(compendyear,2100)
-
-    lat = float(lat)
-    lon = float(lon)
 
     if lon<0:
       lon = 360+lon
@@ -290,13 +297,20 @@ class ServerRoot():
 
     accum = self.genSimGrid(lat, lon, refstartyear, refendyear, compstartyear, compendyear, months)
 
-    #accum = self._trimGrid(accum)
+    accum = self._trimGrid(accum)
 
-    img = self._gridToImage(accum)
-    img = self.img2buffer(img)
-    key = self._setCachedResponse(img.getvalue())
-    img = self.bufferAsPNGFile(img)
-    return img
+    pos = json.dumps({'img':key, 'sw':accum[1], 'ne':accum[2]})
+
+    img = self._gridToImage(accum[0])
+    img = self.img2buffer(img).getvalue()
+    redisclient.set(key+'-img',img)
+    redisclient.set(key,pos)
+
+    print pos
+
+    return {'img':key, 'sw':accum[1], 'ne':accum[2]}
+    #img = self.bufferAsPNGFile(img)
+    #return img
 
 #Entry point of script. Starts up server and sets up URL routing.
 if len(sys.argv)!=2:
@@ -325,8 +339,12 @@ elif sys.argv[1]=='server':
 
   d.connect('some_other', '/showgrid/simgrid/:lat/:lon/:refstartyear/:refendyear/:compstartyear/:compendyear/:months', controller=root, action='simgrid')
 
+  d.connect('some_other', '/imgget/:key', controller=root, action='imgget')
+
   #Set up configuration options for server
   conf = {'/': {'request.dispatch': d}}
+
+  #cherrypy.config.update(file('cfg.ini'))
 
   #Start up the server
   cherrypy.quickstart(root, '/', config=conf)
