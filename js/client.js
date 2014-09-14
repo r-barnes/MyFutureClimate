@@ -116,9 +116,14 @@ var MapViewClass = Backbone.View.extend({
         self.hideClimateOverlays();
         self.climateoverlays[year] = newoverlay;
         self.showClimateOverlay(year);
-
-        vent.trigger('donethinking');
       });
+    })
+    .fail(function() {
+      console.log('Error occurred!');
+      alert('Error occurred. Please try again.');
+    })
+    .always(function() {
+      vent.trigger('donethinking');
     });
     //var newoverlay = new google.maps.GroundOverlay('/showgrid/prcpgrid/'+year+'/3', setMapGrid.climatebounds);
     //var newoverlay = new google.maps.GroundOverlay('/showgrid/prcpmean/'+year+'/3/'+(parseInt(year,10)+1).toString()+'/3', setMapGrid.climatebounds);

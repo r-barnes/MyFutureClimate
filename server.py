@@ -276,10 +276,14 @@ class ServerRoot():
   @cherrypy.expose
   @cherrypy.tools.json_out()
   def simgrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
-    lat = round(float(lat),1)
-    lon = round(float(lon),1)
+    lat = float(lat)
+    lon = float(lon)
+    if lon<0:
+      lon = 360+lon
 
-    key = (lat, lon, refstartyear, refendyear, compstartyear, compendyear, months)
+    y,x = self.temp.yxClosestToLatLon(lat,lon)
+
+    key = (y, x, refstartyear, refendyear, compstartyear, compendyear, months)
     key = hashlib.md5(json.dumps(key)).hexdigest()
 
     print key
@@ -289,9 +293,6 @@ class ServerRoot():
       return json.loads(cached)
 
     compendyear = min(compendyear,2100)
-
-    if lon<0:
-      lon = 360+lon
 
     months = map(int,months.split(','))
 
