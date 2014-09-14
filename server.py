@@ -87,7 +87,7 @@ class ClimateGrid():
 
   def meanVals(self, startyear, endyear, months):
     key = 'meanVals-' + self.filename + '-' + str(startyear)+':'+str(endyear)+':'+str(months)
-    key = hashlib.md5(key).hexdigest()
+    key = 'int-'+hashlib.md5(key).hexdigest()
 
     cached = redisclient.get(key)
     if cached:
@@ -106,7 +106,7 @@ class ClimateGrid():
 
   def stdVals(self, startyear, endyear, months):
     key = 'stdVals-' + self.filename + '-' + str(startyear)+':'+str(endyear)+':'+str(months)
-    key = hashlib.md5(key).hexdigest()
+    key = 'int-'+hashlib.md5(key).hexdigest()
 
     cached = redisclient.get(key)
     if cached:
@@ -284,7 +284,7 @@ class ServerRoot():
 
   @cherrypy.expose
   def imgget(self, key):
-    cached = redisclient.get(key+'-img')
+    cached = redisclient.get('img-'+key)
     if cached:
       cached = self.stringAsBuffer(cached)
       cached = self.bufferAsPNGFile(cached)
@@ -308,7 +308,7 @@ class ServerRoot():
     key = hashlib.md5(json.dumps(key)).hexdigest()
 
     print key
-    cached = redisclient.get(key)
+    cached = redisclient.get('pos-'+key)
     print cached
     if cached:
       return json.loads(cached)
@@ -326,8 +326,8 @@ class ServerRoot():
 
     img = self._gridToImage(accum[0])
     img = self.img2buffer(img).getvalue()
-    redisclient.set(key+'-img',img)
-    redisclient.set(key,pos)
+    redisclient.set('img-'+key,img)
+    redisclient.set('pos-'+key,pos)
 
     print pos
 
