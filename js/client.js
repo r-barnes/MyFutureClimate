@@ -19,7 +19,8 @@ var MapViewClass = Backbone.View.extend({
   events: {
     'change #year':   'yearChangedEvent',
     'input #year':    'yearDrag',
-    'click #switchq': 'switchQuestion'
+    'click #switchq': 'switchQuestion',
+    'click #fitzoom': 'fitZoom'
   },
 
   initialize: function(){
@@ -71,6 +72,11 @@ var MapViewClass = Backbone.View.extend({
     }
 
     self.question = 'goingto';
+  },
+
+  fitZoom: function(){
+    if(self.imagebounds)
+      self.map.fitBounds(self.imagebounds);
   },
 
   switchQuestion: function(){
@@ -162,7 +168,6 @@ var MapViewClass = Backbone.View.extend({
         google.maps.event.addListener(newoverlay,'click',self.mapClicked);
 
         self.imagebounds.extend(markerpos);
-        self.map.fitBounds(self.imagebounds);
 
         self.hideClimateOverlays();
         self.climateoverlays[year] = newoverlay;
