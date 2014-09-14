@@ -298,25 +298,47 @@ class ServerRoot():
 
     return accum
 
+  def _trimGrid(self, grid):
+    nans    = np.isnan(grid)
+    nancols = np.all(nans, axis=0)
+    nanrows = np.all(nans, axis=1)
+
+    firstcol = nancols.argmin() #The first index where not NAN
+    firstrow = nanrows.argmin()
+
+    lastcol = len(nancols) - nancols[::-1].argmin() # Last index where not NAN
+    lastrow = len(nanrows) - nanrows[::-1].argmin() #
+
+    sw = [self.temp.lat[lastrow], self.temp.lon[firstcol]]
+    ne = [self.temp.lat[firstrow], self.temp.lon[lastcol]]
+
+    return (grid[firstrow:lastrow,firstcol:lastcol],sw,ne)
+
   @cherrypy.expose
   def simgrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
     cached = self._getCachedResponse()
     if cached:
       return cached
 
+    compendyear = min(compendyear,2100)
+
+    lat = float(lat)
+    lon = float(lon)
+
     if lon<0:
-      lon = 360-lon
+      lon = 360+lon
 
     months = map(int,months.split(','))
 
     accum = self.genSimGrid(lat, lon, refstartyear, refendyear, compstartyear, compendyear, months)
 
+    #accum = self._trimGrid(accum)
+
     img = self._gridToImage(accum)
     img = self.img2buffer(img)
-    self._setCachedResponse(img.getvalue())
+    key = self._setCachedResponse(img.getvalue())
     img = self.bufferAsPNGFile(img)
     return img
-
 
 #Entry point of script. Starts up server and sets up URL routing.
 if len(sys.argv)!=2:
