@@ -17,7 +17,7 @@ decade gives a snapshot of a location's climate.</p>
 location will go to in the future. Alternatively, it can visualize where a
 location's future climate will come from.</p>
 
-<p>MFC uses data from Global Circulation Models (available <a href="http://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">here</a>) to develop a Euclidean distance between a reference grid cell's climate and every other grid cell. The distance calculation is performed as follows:</p>
+<p>MFC uses data from Global Circulation Models (available <a href="http://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">here</a>) to develop a Euclidean distance between a reference grid cell's climate and every other grid cell. For the demo here we have used only the MIROC5 model. With more time and a more robust caching system it would be possible to use multi-ensemble methods to produce better estimates. Nonetheless, the distance calculation is performed as follows:</p>
 <ol>
 <li>Find the mean temperature of the home grid cell over the reference period. Call this T<sub>ref</sub>.</li>
 <li>Find the mean temperatures of all grid cells in the period of interest. Call this T<sub>int</sub>.</li>
