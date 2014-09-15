@@ -86,12 +86,12 @@ var MapViewClass = Backbone.View.extend({
     if(self.question=='goingto'){
       $('#goingto').hide();
       $('#comingfrom').show();
-      $('#switchq').html('Coming From');
+      $('#switchq').html('Going To');
       self.question = 'comingfrom';
     } else {
       $('#goingto').show();
       $('#comingfrom').hide();
-      $('#switchq').html('Going To');
+      $('#switchq').html('Coming From');
       self.question = 'goingto';
     }
   },
