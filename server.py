@@ -180,21 +180,21 @@ class ServerRoot():
       'tools.staticdir.index': 'index.html'
     }
 
-    self.temp = HDFClimateGrid('data/BCSD_0.5deg_tas_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'tas')
-    self.prcp = HDFClimateGrid('data/BCSD_0.5deg_pr_Amon_MIROC5_rcp45_r1i1p1_200601-210012.nc', 'pr')
+    self.temp = HDFClimateGrid('data/BCSD_0.5deg_tas_Amon_CESM1-CAM5_rcp60_r1i1p1_200601-210012.nc', 'tas')
+    self.prcp = HDFClimateGrid('data/BCSD_0.5deg_pr_Amon_CESM1-CAM5_rcp60_r1i1p1_200601-210012.nc', 'pr')
 
-    self.data = {}
-    for fname in glob.glob('data/BCSD*nc'):
-      fnameparts = fname.split('_')
-      variable   = fnameparts[2]
-      model      = fnameparts[4]
-      rcp        = fnameparts[5]
-      if not rcp in self.data:
-        self.data[rcp] = {}
-      if not model in self.data[rcp]:
-        self.data[rcp][model] = {}
-      print rcp,model,variable
-      self.data[rcp][model][variable] = HDFClimateGrid(fname, variable)
+    # self.data = {}
+    # for fname in glob.glob('data/BCSD*nc'):
+    #   fnameparts = fname.split('_')
+    #   variable   = fnameparts[2]
+    #   model      = fnameparts[4]
+    #   rcp        = fnameparts[5]
+    #   if not rcp in self.data:
+    #     self.data[rcp] = {}
+    #   if not model in self.data[rcp]:
+    #     self.data[rcp][model] = {}
+    #   print rcp,model,variable
+    #   self.data[rcp][model][variable] = HDFClimateGrid(fname, variable)
 
   def img2buffer(self, image):
     output = io.BytesIO()
