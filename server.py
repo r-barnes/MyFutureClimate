@@ -336,8 +336,8 @@ class ServerRoot():
       return json.loads(cached)
 
     print "Building new image"
-    compendyear = min(compendyear,2100)
-    refendyear  = min(refendyear,2100)
+    compendyear = min(int(compendyear),2100)
+    refendyear  = min(int(refendyear),2100)
 
     months = map(int,months.split(','))
 
