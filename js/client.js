@@ -139,31 +139,37 @@ var MapViewClass = Backbone.View.extend({
 
     var img_data_url;
     if(self.question=='goingto')
-      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/2007/2017/'+year+'/'+(parseInt(year,10)+10).toString()+'/6,7,8,12,1,2';
+      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/1985/2005/'+year+'/'+(parseInt(year,10)+20).toString()+'/6,7,8,12,1,2';
     else
-      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/'+year+'/'+(parseInt(year,10)+10).toString()+'/2007/2017/6,7,8,12,1,2';
+      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/'+year+'/'+(parseInt(year,10)+20).toString()+'/1985/2005/6,7,8,12,1,2';
 
     $.getJSON(img_data_url, [], function(data){
       var img_url = '/imgget/'+data.img;
       var img     = new Image();
       img.src = img_url;
 
+      console.log('Data raw', data);
+
       if(data.sw[1]>180)
-        data.sw[1] = data.sw[1]-360
+        data.sw[1] = data.sw[1]-360;
       if(data.ne[1]>180)
-        data.ne[1] = data.ne[1]-360
+        data.ne[1] = data.ne[1]-360;
+
+      console.log('Data fixed', data);
+
+      var my_imagebounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(data.sw[0], data.sw[1]),  //SW
+          new google.maps.LatLng(data.ne[0], data.ne[1])); //NE
 
       self.imagebounds = new google.maps.LatLngBounds(
           new google.maps.LatLng(data.sw[0], data.sw[1]),  //SW
           new google.maps.LatLng(data.ne[0], data.ne[1])); //NE
-
+      self.imagebounds.extend(markerpos);
 
       img.addEventListener('load', function(){
-        var newoverlay = new google.maps.GroundOverlay(img_url, self.imagebounds);
+        var newoverlay = new google.maps.GroundOverlay(img_url, my_imagebounds);
         newoverlay.setOpacity(0.6);
         google.maps.event.addListener(newoverlay,'click',self.mapClicked);
-
-        self.imagebounds.extend(markerpos);
 
         self.hideClimateOverlays();
         self.climateoverlays[year] = newoverlay;
