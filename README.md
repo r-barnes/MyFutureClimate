@@ -38,5 +38,10 @@ Download links:
     ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/BCSD/cesm1-cam5/rcp60/mon/r1i1p1/tas/BCSD_0.5deg_tas_Amon_CESM1-CAM5_rcp60_r1i1p1_200601-210012.nc
 
     ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/BCSD/cesm1-cam5/rcp60/mon/r1i1p1/pr/BCSD_0.5deg_pr_Amon_CESM1-CAM5_rcp60_r1i1p1_200601-210012.nc
+
+    ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/BCSD/cesm1-cam5/historical/mon/r1i1p1/tas/BCSD_0.5deg_tas_Amon_CESM1-CAM5_historical_r1i1p1_195001-200512.nc
+
+    ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/BCSD/cesm1-cam5/historical/mon/r1i1p1/pr/BCSD_0.5deg_pr_Amon_CESM1-CAM5_historical_r1i1p1_195001-200512.nc
+
 Notes:
  * 0.5 degree images are 720x278 pixels.

@@ -183,6 +183,9 @@ class ServerRoot():
     self.temp = HDFClimateGrid('data/BCSD_0.5deg_tas_Amon_CESM1-CAM5_rcp60_r1i1p1_200601-210012.nc', 'tas')
     self.prcp = HDFClimateGrid('data/BCSD_0.5deg_pr_Amon_CESM1-CAM5_rcp60_r1i1p1_200601-210012.nc', 'pr')
 
+    self.temphist = HDFClimateGrid('data/BCSD_0.5deg_tas_Amon_CESM1-CAM5_historical_r1i1p1_195001-200512.nc', 'tas')
+    self.prcphist = HDFClimateGrid('data/BCSD_0.5deg_pr_Amon_CESM1-CAM5_historical_r1i1p1_195001-200512.nc',  'pr')
+
     # self.data = {}
     # for fname in glob.glob('data/BCSD*nc'):
     #   fnameparts = fname.split('_')
@@ -231,16 +234,33 @@ class ServerRoot():
 
   def genSimGrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
     accum = np.zeros(self.temp.data.shape[1:]) #TODO: Abstract this somehow
+
+    print refendyear, compendyear
+
+    if int(refendyear)<2006:
+      temprefgrid = self.temphist
+      prcprefgrid = self.prcphist
+    else:
+      temprefgrid = self.temp
+      prcprefgrid = self.prcp
+
+    if int(compendyear)<2006:
+      tempcompgrid = self.temphist
+      prcpcompgrid = self.prcphist
+    else:
+      tempcompgrid = self.temp
+      prcpcompgrid = self.prcp
+
     for m in months:
-      temp_ref_mean = self.temp.pointMean(lat, lon, refstartyear, refendyear, [m]) #Units are degC
-      temp_mean     = self.temp.meanVals(compstartyear, compendyear, [m])
-      temp_std      = self.temp.stdVals (refstartyear,  refendyear,  [m])
+      temp_ref_mean = temprefgrid.pointMean(lat, lon, refstartyear, refendyear, [m]) #Units are degC
+      temp_mean     = tempcompgrid.meanVals(compstartyear, compendyear, [m])
+      temp_std      = temprefgrid.stdVals  (refstartyear,  refendyear,  [m])
       accum        += np.power(np.divide(temp_mean-temp_ref_mean,temp_std),2.0)
 
     for m in months:
-      prcp_ref_mean = self.prcp.pointMean(lat, lon, refstartyear, refendyear, [m]) #Units are mm/d
-      prcp_mean     = self.prcp.meanVals(compstartyear, compendyear, [m])
-      prcp_std      = self.prcp.stdVals (refstartyear,  refendyear,  [m])
+      prcp_ref_mean = prcprefgrid.pointMean(lat, lon, refstartyear, refendyear, [m]) #Units are mm/d
+      prcp_mean     = prcpcompgrid.meanVals(compstartyear, compendyear, [m])
+      prcp_std      = prcprefgrid.stdVals  (refstartyear,  refendyear,  [m])
       accum        += np.power(np.divide(prcp_mean-prcp_ref_mean,prcp_std),2.0)
 
     accum = np.sqrt(accum)
