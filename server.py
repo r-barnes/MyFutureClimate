@@ -229,9 +229,17 @@ class ServerRoot():
 
     #Build a mask from the NaN values so that we can avoid displaying them
     mask = Image.fromarray((~np.isnan(grid))*3000.).convert('L')
+
+    #NOTE: This makes the grid bichromatic
+    grid = np.logical_not(np.isnan(grid))*1.
+    print grid
+    grid = Image.fromarray(mpl.cm.jet_r(grid, bytes=True)).convert('RGBA')
+
+    #Used for making the grid coloured
     #Scale the grid based on the max/min values (ignoring NaNs) and then convert
     #to RGBA colour scheme
-    grid = Image.fromarray(mpl.cm.jet_r((grid-np.nanmin(grid))/(np.nanmax(grid)-np.nanmin(grid)), bytes=True)).convert('RGBA')
+    #grid = Image.fromarray(mpl.cm.jet_r((grid-np.nanmin(grid))/(np.nanmax(grid)-np.nanmin(grid)), bytes=True)).convert('RGBA')
+
     #Mask the NaN values to transparent
     grid.putalpha(mask)
 
