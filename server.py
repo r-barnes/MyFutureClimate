@@ -401,13 +401,6 @@ elif sys.argv[1]=='server':
   #If we don't know what it is, try to handle it using the class itself
   d.connect('default_route', '/', controller=root)
 
-  #Recognised paths go here
-  d.connect('some_other', '/showgrid/tempgrid/:year/:month', controller=root, action='tempgrid')
-  d.connect('some_other', '/showgrid/prcpgrid/:year/:month', controller=root, action='prcpgrid')
-
-  d.connect('some_other', '/showgrid/tempmean/:startyear/:startmonth/:endyear/:endmonth', controller=root, action='tempmean')
-  d.connect('some_other', '/showgrid/prcpmean/:startyear/:startmonth/:endyear/:endmonth', controller=root, action='prcpmean')
-
   d.connect('some_other', '/showgrid/simgrid/:lat/:lon/:refstartyear/:refendyear/:compstartyear/:compendyear/:months', controller=root, action='simgrid')
 
   d.connect('some_other', '/imgget/:key', controller=root, action='imgget')
