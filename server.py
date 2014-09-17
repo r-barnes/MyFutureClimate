@@ -288,6 +288,11 @@ class ServerRoot():
     lastcol = len(nancols) - nancols[::-1].argmin() # Last index where not NAN
     lastrow = len(nanrows) - nanrows[::-1].argmin() #
 
+    firstcol -= 1
+    firstrow -= 1
+    lastcol  += 1
+    lastrow  += 1
+
     lons = self.temp.lon
     lons = np.roll(lons,360)
 
