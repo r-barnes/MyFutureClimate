@@ -222,6 +222,11 @@ class ServerRoot():
     #Flip grid to display in the familiiar orientation
     grid            = grid[::-1,:]
 
+    number_of_data_cells = np.sum(np.logical_not(np.isnan(grid)))
+
+    if number_of_data_cells == 0:
+      return False
+
     #Build a mask from the NaN values so that we can avoid displaying them
     mask = Image.fromarray((~np.isnan(grid))*3000.).convert('L')
     #Scale the grid based on the max/min values (ignoring NaNs) and then convert
@@ -351,11 +356,17 @@ class ServerRoot():
     print "Trimming"
     accum = self._trimGrid(accum)
 
-    pos = json.dumps({'img':key, 'sw':accum[1], 'ne':accum[2]})
 
     img = self._gridToImage(accum[0])
-    img = self.img2buffer(img).getvalue()
-    redisclient.set('img-'+key,img)
+    if img:
+      img        = self.img2buffer(img).getvalue()
+      has_analog = True
+      redisclient.set('img-'+key,img)
+    else:
+      has_analog = False
+
+    pos = json.dumps({'img':key, 'sw':accum[1], 'ne':accum[2], 'has_analog':has_analog})
+
     redisclient.set('pos-'+key,pos)
 
     print pos
