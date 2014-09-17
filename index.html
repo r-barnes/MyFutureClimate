@@ -44,15 +44,15 @@
   <div id="thinkingbox">
     <img class="thinking-spinner" src="img/thinking.png">
   </div>
-  <div id="welcomeview">
-    <div class="geo-location-form row">
-      <div class="col-xs-9 col-sm-6 col-sm-offset-2">
+  <div id="welcomeview" class="container">
+    <div class="span12" style="text-align:center;font-size:40pt;color:white;font-weight:bold">Future Climate Analysis</div>
+    <form class="form-horizontal form-inline" role="form" style="text-align:center">
+      <div class="form-group">
+      <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
         <input style="font-size:25pt;height:40pt" class="form-control" id="citylookup" type="text" value="" placeholder="What city are you in?">
+        <a class="btn btn-primary" id="current-loc" role="button" style="display:inline-block;margin-top:0px"><img style="height:30pt" src="img/loc-pin.png" alt="location icon"></a>
       </div>
-      <div class="col-xs-3 col-sm-2">
-        <a class="btn btn-primary" id="current-loc" role="button"><img style="height:30pt" src="img/loc-pin.png" alt="location icon"></a>
-      </div>
-    </div>
+    </form>
   </div>
   <div id="tourview">
     <h1>About</h1>
