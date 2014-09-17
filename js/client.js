@@ -55,7 +55,7 @@ var MapViewClass = Backbone.View.extend({
     self.click_marker = new google.maps.Marker({
       position:  minneapolis,
       map:       self.map,
-      draggable: true,
+//      draggable: true,
       zIndex:    1,
     });
 
