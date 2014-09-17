@@ -26,12 +26,13 @@
 
 
 
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
   <script type="text/javascript" src="js/lib/jquery.min.js"></script>
   <script type="text/javascript" src="js/lib/jquery.debounce.js"></script>
   <script type="text/javascript" src="js/lib/underscore.min.js"></script>
   <script type="text/javascript" src="js/lib/backbone.min.js"></script>
   <script type="text/javascript" src="js/lib/typeahead.js"></script>
+  <script type="text/javascript" src="js/lib/jquery.geocomplete.min.js"></script>
   <script type="text/javascript" src="js/client.js" defer></script>
   <link rel="stylesheet" href="stylesheets/screen.css">
 
@@ -42,6 +43,16 @@
 <body>
   <div id="thinkingbox">
     <img class="thinking-spinner" src="img/thinking.png">
+  </div>
+  <div id="welcomeview">
+    <div class="geo-location-form row">
+      <div class="col-xs-9 col-sm-6 col-sm-offset-2">
+        <input style="font-size:25pt;height:40pt" class="form-control" id="citylookup" type="text" value="" placeholder="What city are you in?">
+      </div>
+      <div class="col-xs-3 col-sm-2">
+        <a class="btn btn-primary" id="current-loc" role="button"><img style="height:30pt" src="img/loc-pin.png" alt="location icon"></a>
+      </div>
+    </div>
   </div>
   <div id="tourview">
     <h1>About</h1>

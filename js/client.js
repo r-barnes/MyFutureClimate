@@ -26,6 +26,8 @@ var MapViewClass = Backbone.View.extend({
   initialize: function(){
     var self = this;
 
+    self.listenTo(vent, 'map:center_on', this.centerMap, this);
+
     var minneapolis = new google.maps.LatLng(44.9833, -93.2667);
 
     //These bounds are used for CONUS climate projections
@@ -61,17 +63,14 @@ var MapViewClass = Backbone.View.extend({
 
     this.yearChangedEvent = $.debounce(self.yearChanged, 500);
 
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-        self.click_marker.setPosition(initialLocation);
-        self.map.setCenter(initialLocation);
-      }, function() {
-        console.log('Could not get geolocation.');
-      });
-    }
-
     self.question = 'goingto';
+  },
+
+  centerMap: function(pos){
+    var self = this;
+    var loc  = new google.maps.LatLng(pos.lat,pos.lon);
+    self.click_marker.setPosition(loc);
+    self.map.setCenter(loc);
   },
 
   fitZoom: function(){
@@ -190,8 +189,70 @@ var MapViewClass = Backbone.View.extend({
   }
 });
 
-var MapView  = new MapViewClass();
-var TourView = new TourClass();
+
+
+
+var WelcomeClass = Backbone.View.extend({
+  el: '#welcomeview',
+
+  events: {
+    'click #closetour':   'closeTour',
+    'click #current-loc': 'navLoc'
+  },
+
+  initialize: function(){
+    var self = this;
+
+    $("#citylookup").geocomplete()
+      .bind("geocode:result", self.geocodeReturn.bind(self))
+      .bind("geocode:error", function(event, status){
+        $.log("ERROR: " + status);
+      })
+      .bind("geocode:multiple", function(event, results){
+        $.log("Multiple: " + results.length + " results found");
+      });
+  },
+
+  geocodeReturn: function(event,result){
+    console.log(result);
+    var lat = result.geometry.location.lat();
+    var lon = result.geometry.location.lng();
+    this.gotLocation(lat,lon);
+  },
+
+  navLoc: function(){
+    var self = this;
+
+    $('#citylookup').val('Current Location');
+
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        self.gotLocation(position.coords.latitude,position.coords.longitude);
+      }, function() {
+        console.log('Could not get geolocation.');
+      });
+    }
+  },
+
+  gotLocation: function(lat,lon){
+    console.log('GotLoc',lat,lon);
+    vent.trigger('map:center_on',{lat:lat,lon:lon});
+    this.showLoc();
+  },
+
+  showLoc: function(){
+  },
+
+  closeTour: function(){
+    this.remove();
+  }
+});
+
+
+
+var WelcomeView = new WelcomeClass();
+var MapView     = new MapViewClass();
+var TourView    = new TourClass();
 
 vent.on('thinking', function(){
   $('#thinkingbox').show();
