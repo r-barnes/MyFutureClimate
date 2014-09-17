@@ -34,6 +34,7 @@
   <script type="text/javascript" src="js/lib/typeahead.js"></script>
   <script type="text/javascript" src="js/lib/jquery.geocomplete.min.js"></script>
   <script type="text/javascript" src="js/client.js" defer></script>
+  <script type="text/javascript" src="js/lib/dygraph.js"></script>
   <link rel="stylesheet" href="stylesheets/screen.css">
 
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
@@ -54,6 +55,24 @@
         <a class="btn btn-primary" id="current-loc" role="button" style="display:inline-block;margin-top:0px"><img style="height:30pt" src="img/loc-pin.png" alt="location icon"></a>
       </div>
     </form>
+
+    <table class="table" id="sumavgs">
+    <thead>
+      <tr><td>2010</td><td>2030</td><td>2050</td><td>2070</td><td>2090</td></tr>
+    </thead>
+    <tbody>
+    <tr class="temp"><td class="y2010"></td><td class="y2030"></td><td class="y2050"></td><td class="y2070"></td><td class="y2090"></td></tr>
+    <tr class="prcp"><td class="y2010"></td><td class="y2030"></td><td class="y2050"></td><td class="y2070"></td><td class="y2090"></td></tr>
+    </tbody>
+    </table>
+
+    <div class="btn-group">
+      <button type="button" class="btn btn-default">Button 1</button>
+      <button type="button" class="btn btn-default">Button 2</button>
+      <button type="button" class="btn btn-default">Button 3</button>
+    </div>
+
+    <div id="map-canvas"></div>
   </div>
   <div id="tourview">
     <h1>About</h1>
@@ -70,16 +89,13 @@
     <p>More details are available <a href="about.html">here</a>.</p>
     <p><button id="closetour" style="font-size:30pt">Okay!</button></p>
   </div>
-  <div id="mapview">
-    <div id="map-canvas"></div>
-    <!--<input type="range" min="1950" max="2099" value="1950" step="20" id="year" style="width:100%" />-->
-    <button id="fitzoom">Fit Zoom</button>
-    <div id="footer">
-      <span id="goingto">Where will my home's climate be in <span class="yearshow">____</span>? (Drag handle!)</span>
-      <span id="comingfrom">What current climate will be at my home in <span class="yearshow">____</span>? (Drag handle!)</span>
-      <button id="switchq">Coming From</button>
-      <br><input type="range" min="2010" max="2090" value="2010" step="10" id="year" style="width:100%" />
-    </div>
+  <!--<input type="range" min="1950" max="2099" value="1950" step="20" id="year" style="width:100%" />-->
+  <button id="fitzoom">Fit Zoom</button>
+  <div id="footer">
+    <span id="goingto">Where will my home's climate be in <span class="yearshow">____</span>? (Drag handle!)</span>
+    <span id="comingfrom">What current climate will be at my home in <span class="yearshow">____</span>? (Drag handle!)</span>
+    <button id="switchq">Coming From</button>
+    <br><input type="range" min="2010" max="2090" value="2010" step="10" id="year" style="width:100%" />
   </div>
 </body>
 </html>
