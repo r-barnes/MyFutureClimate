@@ -17,8 +17,6 @@ var MapViewClass = Backbone.View.extend({
   el: '#mapview',
 
   events: {
-    'change #year':   'yearChangedEvent',
-    'input #year':    'yearDrag',
     'click #switchq': 'switchQuestion',
     'click #fitzoom': 'fitZoom'
   },
@@ -27,6 +25,7 @@ var MapViewClass = Backbone.View.extend({
     var self = this;
 
     self.listenTo(vent, 'map:center_on', this.centerMap, this);
+    self.listenTo(vent, 'goyear', this.goYear, this);
 
     var minneapolis = new google.maps.LatLng(44.9833, -93.2667);
 
@@ -42,6 +41,7 @@ var MapViewClass = Backbone.View.extend({
         new google.maps.LatLng(-55.25, -180),  //SW
         new google.maps.LatLng( 83.25,  180)); //NE
 
+    self.year = 2010;
 
     var mapOptions = {
       zoom: 4,
@@ -61,9 +61,18 @@ var MapViewClass = Backbone.View.extend({
 
     this.climateoverlays = {};
 
-    this.yearChangedEvent = $.debounce(self.yearChanged, 500);
+    self.question = 'comingfrom';
 
-    self.question = 'goingto';
+    $("#yearsel label").on('click',function() {
+      var the_year=$(this).text();
+      console.log('Clicked year button ' + the_year);
+      vent.trigger('goyear',the_year);
+    });
+  },
+
+  goYear: function(year){
+    this.year = year;
+    this.setMapGrid();
   },
 
   centerMap: function(pos){
@@ -100,17 +109,6 @@ var MapViewClass = Backbone.View.extend({
     this.click_marker.setVisible(true);
   },
 
-  yearDrag: function(event){
-    var year = $('#year').val();
-    $('.yearshow').html(year);
-  },
-
-  yearChanged: function(event){
-    var year = $('#year').val();
-    $('.yearshow').html(year);
-    this.setMapGrid(year);
-  },
-
   hideClimateOverlays: function(){
     for(var i in this.climateoverlays)
       this.climateoverlays[i].setMap(null);
@@ -120,8 +118,18 @@ var MapViewClass = Backbone.View.extend({
     this.climateoverlays[year].setMap(this.map);
   },
 
-  setMapGrid: function(year){
+  setMapGrid: function(){
     var self = this;
+
+    var year = self.year;
+
+    console.log('Changing map grid',year);
+
+    if(typeof(year)==='string')
+      year=parseInt(year,10);
+    else if(typeof(year)!=='number')
+      return;
+
 
 //Deprecated client-side caching
 /*    if(typeof(self.climateoverlays[year])!=='undefined'){
@@ -235,12 +243,10 @@ var WelcomeClass = Backbone.View.extend({
   },
 
   gotLocation: function(lat,lon){
+    var self = this;
+
     console.log('GotLoc',lat,lon);
     vent.trigger('map:center_on',{lat:lat,lon:lon});
-    this.showLoc();
-  },
-
-  showLoc: function(){
   },
 
   closeTour: function(){

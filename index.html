@@ -46,32 +46,37 @@
   </div>
   <div id="welcomeview" class="container">
     <div class="span12" style="text-align:center;font-size:40pt;color:white;font-weight:bold">Future Climate Analysis</div>
-    <div class="span12" style="text-align:center;font-size:20pt;color:white;font-weight:bold">A Tool for Policy Planning</div>
-    <form class="form-horizontal form-inline" role="form" style="text-align:center">
+    <div class="span12" style="text-align:center;font-size:20pt;color:white;font-weight:bold">A Tool for Planning &amp; Mitigation</div>
+
+    <h2 class="text-center" style="color:white;padding-bottom:5px">The climate of</h2>
+    <form class="form-horizontal form-inline" role="form" style="text-align:center;">
       <div class="form-group">
-      <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
         <input style="font-size:25pt;height:40pt" class="form-control" id="citylookup" type="text" value="" placeholder="What city are you in?">
         <a class="btn btn-primary" id="current-loc" role="button" style="display:inline-block;margin-top:0px"><img style="height:30pt" src="img/loc-pin.png" alt="location icon"></a>
       </div>
     </form>
 
-    <table class="table" id="sumavgs">
-    <thead>
-      <tr><td>2010</td><td>2030</td><td>2050</td><td>2070</td><td>2090</td></tr>
-    </thead>
-    <tbody>
-    <tr class="temp"><td class="y2010"></td><td class="y2030"></td><td class="y2050"></td><td class="y2070"></td><td class="y2090"></td></tr>
-    <tr class="prcp"><td class="y2010"></td><td class="y2030"></td><td class="y2050"></td><td class="y2070"></td><td class="y2090"></td></tr>
-    </tbody>
-    </table>
-
-    <div class="btn-group">
-      <button type="button" class="btn btn-default">Button 1</button>
-      <button type="button" class="btn btn-default">Button 2</button>
-      <button type="button" class="btn btn-default">Button 3</button>
+    <h2 class="text-center" style="color:white">in the year</h2>
+    <div style="text-align:center">
+    <div class="btn-group" data-toggle="buttons" id="yearsel">
+      <label class="btn btn-lg btn-primary active"><input type="radio" name="options" checked>2010</label>
+      <label class="btn btn-lg btn-primary"><input type="radio" name="options">2030</label>
+      <label class="btn btn-lg btn-primary"><input type="radio" name="options">2050</label>
+      <label class="btn btn-lg btn-primary"><input type="radio" name="options">2070</label>
+      <label class="btn btn-lg btn-primary"><input type="radio" name="options">2090</label>
+    </div>
     </div>
 
-    <div id="map-canvas"></div>
+    <h1 class="text-center" style="color:white">will be like the highlighted area is today</h1>
+    <h3 class="text-center" style="color:white">(<span id="tempcomp"></span>, <span id="prcpcomp"></span>)
+    <h3 class="text-center" style="color:white">(<span id="origtemp"></span>&deg;C&#8594;<span id="newtemp"></span>&deg;C, <span id="origprcp"></span><sup>mm</sup>/<sub>yr</sub>&#8594;<span id="newprcp"></span><sup>mm</sup>/<sub>yr</sub>)
+    <div style="margin-top:1em" id="map-canvas"></div>
+
+    <hr>
+
+    <p>Further details are available <a href="/about.html">here</a>.</p>
+
+    <p style="margin-top:2in">&nbsp;</p>
   </div>
   <div id="tourview">
     <h1>About</h1>
@@ -87,14 +92,6 @@
     <p>Areas without color are completely unlike your current climate.</p>
     <p>More details are available <a href="about.html">here</a>.</p>
     <p><button id="closetour" style="font-size:30pt">Okay!</button></p>
-  </div>
-  <!--<input type="range" min="1950" max="2099" value="1950" step="20" id="year" style="width:100%" />-->
-  <button id="fitzoom">Fit Zoom</button>
-  <div id="footer">
-    <span id="goingto">Where will my home's climate be in <span class="yearshow">____</span>? (Drag handle!)</span>
-    <span id="comingfrom">What current climate will be at my home in <span class="yearshow">____</span>? (Drag handle!)</span>
-    <button id="switchq">Coming From</button>
-    <br><input type="range" min="2010" max="2090" value="2010" step="10" id="year" style="width:100%" />
   </div>
 </body>
 </html>
