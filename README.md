@@ -31,9 +31,12 @@ the environment you'll need to run our code.
 Data Sources
 ============
 
-Data can be viewed [here](ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/).
+Climate Data
+------------
 
-Download links:
+CMIP5 GCM climate data can be viewed [here](ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/).
+
+The prototype app uses the CESM1-CAM5 model. Later iterations will use a multi-ensemble average of climate models. The download links for the data used in the app are as follows. The downloaded files should be placed in the `data/` directory.
 
     ftp://gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/global_mon/BCSD/cesm1-cam5/rcp60/mon/r1i1p1/tas/BCSD_0.5deg_tas_Amon_CESM1-CAM5_rcp60_r1i1p1_200601-210012.nc
 
@@ -45,3 +48,12 @@ Download links:
 
 Notes:
  * 0.5 degree images are 720x278 pixels.
+
+Elevation Data (if we do something we sea level rise)
+-----------------------------------------------------
+ftp://srtm.csi.cgiar.org/SRTM_V41/SRTM_Data_GeoTiff/
+
+
+Media
+=====
+Category finals presentation is [here](https://www.youtube.com/watch?v=h_GzzvIa4QY&list=UU3ofNKrKZBn8AvFeG3A6w6A) and starts at 29:17.
