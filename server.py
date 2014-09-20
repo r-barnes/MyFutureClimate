@@ -237,7 +237,6 @@ class ServerRoot():
 
     #NOTE: This makes the grid bichromatic
     grid = np.logical_not(np.isnan(grid))*1.
-    print grid
     grid = Image.fromarray(mpl.cm.jet_r(grid, bytes=True)).convert('RGBA')
 
     #Used for making the grid coloured
@@ -314,10 +313,8 @@ class ServerRoot():
     lons = self.temp.lon
     lons = np.roll(lons,360)
 
-    print lastrow,lastcol
     lastrow = min(lastrow,len(self.temp.lat)-1)
     lastcol = min(lastcol,len(lons)-1)
-    print lastrow,lastcol
 
     sw = [float(self.temp.lat[firstrow]), float(lons[firstcol])]
     ne = [float(self.temp.lat[lastrow]), float(lons[lastcol])]
@@ -370,6 +367,11 @@ class ServerRoot():
     accum = self._trimGrid(accum)
 
 
+    orig_temp = float(self.temphist.pointMean(lat, lon, 1984, 2004, [1,2,6,7,8,12]))
+    orig_prcp = float(self.prcphist.pointMean(lat, lon, 1984, 2004, [1,2,6,7,8,12]))
+    new_temp  = float(self.temp.pointMean(lat, lon, refstartyear, refendyear, [1,2,6,7,8,12]))
+    new_prcp  = float(self.prcp.pointMean(lat, lon, refstartyear, refendyear, [1,2,6,7,8,12]))
+
     img = self._gridToImage(accum[0])
     if img:
       img        = self.img2buffer(img).getvalue()
@@ -378,13 +380,11 @@ class ServerRoot():
     else:
       has_analog = False
 
-    pos = json.dumps({'img':key, 'sw':accum[1], 'ne':accum[2], 'has_analog':has_analog})
+    pos = json.dumps({'img':key, 'sw':accum[1], 'ne':accum[2], 'has_analog':has_analog, 'orig_temp':orig_temp, 'orig_prcp': orig_prcp,'new_temp':new_temp,'new_prcp':new_prcp})
 
     redisclient.set('pos-'+key,pos)
 
-    print pos
-
-    return {'img':key, 'sw':accum[1], 'ne':accum[2]}
+    return {'img':key, 'sw':accum[1], 'ne':accum[2], 'has_analog':has_analog, 'orig_temp':orig_temp, 'orig_prcp': orig_prcp,'new_temp':new_temp,'new_prcp':new_prcp}
     #img = self.bufferAsPNGFile(img)
     #return img
 
