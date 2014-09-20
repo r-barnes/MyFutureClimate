@@ -164,6 +164,21 @@ var MapViewClass = Backbone.View.extend({
 
       console.log('Data fixed', data);
 
+      if(data.orig_temp>data.new_temp)
+        $('#tempcomp').html('colder');
+      else
+        $('#tempcomp').html('warmer');
+
+      if(data.orig_prcp>data.new_prcp)
+        $('#prcpcomp').html('drier');
+      else
+        $('#prcpcomp').html('wetter');
+
+      $('#origtemp').html(Math.round(data.orig_temp));
+      $('#origprcp').html(Math.round(365*data.orig_prcp));
+      $('#newtemp').html(Math.round(data.new_temp));
+      $('#newprcp').html(Math.round(365*data.new_prcp));
+
       var my_imagebounds = new google.maps.LatLngBounds(
           new google.maps.LatLng(data.sw[0], data.sw[1]),  //SW
           new google.maps.LatLng(data.ne[0], data.ne[1])); //NE
