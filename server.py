@@ -32,6 +32,11 @@ redisclient = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 
 def binaryfind(arr, val):
+  if val<arr[0]:
+    return 0
+  elif val>arr[-1]:
+    return len(arr)-1
+
   if val<arr[0] or val>arr[-1]:
     raise Exception('Value not in range of array')
 
