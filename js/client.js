@@ -39,7 +39,7 @@ var DetailsClass = Backbone.View.extend({
 
   getDetails: function(){
     var self = this;
-    vent.trigger('thinking', 13);
+    vent.trigger('thinking', 14);
 
     var markerpos = MapView.click_marker.getPosition();
     var lat = markerpos.lat();
