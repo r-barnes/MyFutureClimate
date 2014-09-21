@@ -20,8 +20,11 @@ import time
 import json          #For talking to server
 import hashlib       #For Redis
 import cPickle       #Used for stashing Numpy arrays
+import calendar      #For timestamps
+import rtree
+import pandas as pd
 
-#import code #For debugging with: code.interact(local=locals())
+import code #For debugging with: code.interact(local=locals())
 
 redisclient = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -61,6 +64,8 @@ class ClimateGrid():
     return self.data[time]
 
   def yxClosestToLatLon(self, lat, lon):
+    if lon<0:
+      lon = 360+lon
     y = binaryfind(self.lat[:],float(lat))
     x = binaryfind(self.lon[:],float(lon))
     return y, x
@@ -191,6 +196,28 @@ class ServerRoot():
     self.temphist = HDFClimateGrid('data/BCSD_0.5deg_tas_Amon_CESM1-CAM5_historical_r1i1p1_195001-200512.nc', 'tas')
     self.prcphist = HDFClimateGrid('data/BCSD_0.5deg_pr_Amon_CESM1-CAM5_historical_r1i1p1_195001-200512.nc',  'pr')
 
+    with open ("WorldCities.json", "r") as myfile:
+      self.points = json.loads(myfile.read())
+
+    p           = rtree.index.Property()
+    p.dimension = 2
+    self.ct     = rtree.index.Index(properties=p)
+
+    print "Eliminating unneeded points"
+    res = []
+    for i in range(len(self.points)):
+      try:
+        y,x = self.temp.yxClosestToLatLon(self.points[i]['lat'],self.points[i]['lon'])
+      except:
+        continue
+      self.ct.add(0,[float(y),float(x)],obj=self.points[i]['name'])
+
+
+
+    for i in res:
+      self.ct.add(1, (float(i[1][0]),float(i[1][1]),float(i[1][0]),float([1][1])), i[2])
+
+
     # self.data = {}
     # for fname in glob.glob('data/BCSD*nc'):
     #   fnameparts = fname.split('_')
@@ -252,7 +279,7 @@ class ServerRoot():
   def genSimGrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
     accum = np.zeros(self.temp.data.shape[1:]) #TODO: Abstract this somehow
 
-    print refendyear, compendyear
+    y,x = self.temp.yxClosestToLatLon(lat,lon)
 
     if int(refendyear)<2006:
       temprefgrid = self.temphist
@@ -283,12 +310,6 @@ class ServerRoot():
     accum = np.sqrt(accum)
     #accum = np.log (accum)
     print 'similarity max',np.nanmax(accum)
-
-    #Make portions of the map which are not like this climate transparent
-    accum[accum>2] = np.NaN
-
-    #TODO: Used to shift Global 0.5 degree grid so that the first data point is
-    #-180 degrees. This ensures appropriate centering in Google Maps.
 
     return accum
 
@@ -335,13 +356,87 @@ class ServerRoot():
 
   @cherrypy.expose
   @cherrypy.tools.json_out()
-  def simgrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
-    print "Entering simgrid"
+  def summary(self, lat, lon):
+    months = [1,2,6,7,8,12]
 
     lat = float(lat)
     lon = float(lon)
     if lon<0:
       lon = 360+lon
+
+    y,x = self.temp.yxClosestToLatLon(lat,lon)
+
+    key = (y, x)
+    key = 'summary-' + hashlib.md5(json.dumps(key)).hexdigest()
+
+    cached = redisclient.get(key)
+    if cached:
+      print "Found cached summary data."
+      return json.loads(cached)
+
+    #Fetch data
+    temps = self.temp.data[:,y,x]
+    prcps = self.prcp.data[:,y,x]
+    times = self.temp.timesToDateTime()
+
+    #Pack everything into a convenient data frame
+    df = pd.DataFrame(np.column_stack((temps,prcps)),times)
+
+    #Rolling 10-year average sampled once per year
+    out = pd.rolling_mean(df,120)[::12]
+
+    times = map(lambda x: calendar.timegm(x.utctimetuple()),out.index.tolist())
+    #Create a 2d matrix of [[time,val,val],[time,val,val],...]
+    out   = np.column_stack((times,out.as_matrix()))
+    #Eliminate NaNs so that JSON output works
+    out   = np.where(np.isnan(out), None, out).tolist()
+
+    #code.interact(local=locals())
+
+    return out
+
+    ##Generating average climate
+    #avgs = []
+    #for year in range(2010,2100,10):
+    #  print year
+    #  temp_mean = float(self.temp.pointMean(lat,lon,year,year+10,months))
+    #  prcp_mean = float(self.prcp.pointMean(lat,lon,year,year+10,months))
+    #  avgs.append({"year":year, "temp":temp_mean, "prcp": prcp_mean})
+
+    # for m in months:
+    #   temp_ref_mean = temprefgrid.pointMean(lat, lon, refstartyear, refendyear, [m]) #Units are degC
+    #   temp_mean     = tempcompgrid.meanVals(compstartyear, compendyear, [m])
+    #   temp_std      = temprefgrid.stdVals  (refstartyear,  refendyear,  [m])
+    #   accum        += np.power(np.divide(temp_mean-temp_ref_mean,temp_std),2.0)
+
+    # for m in months:
+    #   prcp_ref_mean = prcprefgrid.pointMean(lat, lon, refstartyear, refendyear, [m]) #Units are mm/d
+    #   prcp_mean     = prcpcompgrid.meanVals(compstartyear, compendyear, [m])
+    #   prcp_std      = prcprefgrid.stdVals  (refstartyear,  refendyear,  [m])
+    #   accum        += np.power(np.divide(prcp_mean-prcp_ref_mean,prcp_std),2.0)
+
+#    accum = np.sqrt(accum)
+    #accum = np.log (accum)
+#    print 'similarity max',np.nanmax(accum)
+
+    #Make portions of the map which are not like this climate transparent
+#    accum[accum>2] = np.NaN
+
+    #TODO: Used to shift Global 0.5 degree grid so that the first data point is
+    #-180 degrees. This ensures appropriate centering in Google Maps.
+
+
+  @cherrypy.expose
+  @cherrypy.tools.json_out()
+  def simgrid(self, lat, lon, refstartyear, refendyear, compstartyear, compendyear, months):
+    print "Entering simgrid"
+
+    lat = float(lat)
+    lon = float(lon)
+    print lat,lon
+    if lon<0:
+      lon = 360+lon
+    print lat,lon
 
     y,x = self.temp.yxClosestToLatLon(lat,lon)
 
@@ -363,6 +458,27 @@ class ServerRoot():
 
     accum = self.genSimGrid(lat, lon, refstartyear, refendyear, compstartyear, compendyear, months)
 
+    #Collect all cells which make up the future climate
+    future_climate = np.where(accum<3)
+    #Grab their values
+    values         = accum[future_climate]
+    #Create a list of all of these
+    future_climate = zip(future_climate[0],future_climate[1],values)
+    #Order list by increasing similarity value
+    future_climate.sort(key = lambda x: x[2])
+
+    if not len(future_climate)==0:
+      target_climate = future_climate[0]
+
+      #Retrieve city closest to the most similar future climate
+      cities = self.ct.nearest((target_climate[0],target_climate[1]), 1, objects=True)
+      city   = list(cities)[0].object
+    else:
+      city = ''
+
+    #Make portions of the map which are not like this climate transparent
+    accum[accum>2] = np.NaN
+
     print "Trimming"
     accum = self._trimGrid(accum)
 
@@ -380,13 +496,13 @@ class ServerRoot():
     else:
       has_analog = False
 
-    pos = json.dumps({'img':key, 'sw':accum[1], 'ne':accum[2], 'has_analog':has_analog, 'orig_temp':orig_temp, 'orig_prcp': orig_prcp,'new_temp':new_temp,'new_prcp':new_prcp})
+    output = {'img':key, 'sw':accum[1], 'ne':accum[2], 'has_analog':has_analog, 'orig_temp':orig_temp, 'orig_prcp': orig_prcp,'new_temp':new_temp,'new_prcp':new_prcp,'city':city}
+
+    pos = json.dumps(output)
 
     redisclient.set('pos-'+key,pos)
 
-    return {'img':key, 'sw':accum[1], 'ne':accum[2], 'has_analog':has_analog, 'orig_temp':orig_temp, 'orig_prcp': orig_prcp,'new_temp':new_temp,'new_prcp':new_prcp}
-    #img = self.bufferAsPNGFile(img)
-    #return img
+    return output
 
 #Entry point of script. Starts up server and sets up URL routing.
 if len(sys.argv)!=2:
@@ -407,6 +523,8 @@ elif sys.argv[1]=='server':
   d.connect('default_route', '/', controller=root)
 
   d.connect('some_other', '/showgrid/simgrid/:lat/:lon/:refstartyear/:refendyear/:compstartyear/:compendyear/:months', controller=root, action='simgrid')
+
+  d.connect('some_other', '/summary/:lat/:lon', controller=root, action='summary')
 
   d.connect('some_other', '/imgget/:key', controller=root, action='imgget')
 
