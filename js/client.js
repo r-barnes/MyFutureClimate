@@ -13,6 +13,32 @@ var TourClass = Backbone.View.extend({
   }
 });
 
+var SettingsClass = Backbone.View.extend({
+  el: '#settings',
+
+  events: {
+    'click .closebox':  'close',
+  },
+
+  initialize: function(){
+    $('#settings-pop').click(function(){$('#settings').show()});
+
+    $("#seasonsel label").on('click',function() {
+      var theseason=$(this).text();
+      if(theseason=='Annual')
+        MapView.months = MapView.annual;
+      else if (theseason=='Summer')
+        MapView.months = MapView.summer;
+      else if (theseason=='Winter')
+        MapView.months = MapView.winter;
+    });
+  },
+
+  close: function(){
+    $('#settings').hide();
+  }
+});
+
 var MapViewClass = Backbone.View.extend({
   el: '#mapview',
 
@@ -42,6 +68,11 @@ var MapViewClass = Backbone.View.extend({
         new google.maps.LatLng( 83.25,  180)); //NE
 
     self.year = 2010;
+
+    self.winter = '1,2,12';
+    self.summer = '6,7,8';
+    self.annual = '1,2,6,7,8,12';
+    self.months = self.annual;
 
     var mapOptions = {
       zoom: 4,
@@ -184,9 +215,9 @@ var MapViewClass = Backbone.View.extend({
 
     var img_data_url;
     if(self.question=='goingto')
-      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/1985/2005/'+year+'/'+(parseInt(year,10)+20).toString()+'/6,7,8,12,1,2';
+      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/1985/2005/'+year+'/'+(parseInt(year,10)+20).toString() + self.months;
     else
-      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/'+year+'/'+(parseInt(year,10)+20).toString()+'/1985/2005/6,7,8,12,1,2';
+      img_data_url = '/showgrid/simgrid/'+lat+'/'+lon+'/'+year+'/'+(parseInt(year,10)+20).toString()+'/1985/2005/' + self.months;
 
     $.getJSON(img_data_url, [], function(data){
       var img_url = '/imgget/'+data.img;
@@ -312,6 +343,7 @@ var WelcomeClass = Backbone.View.extend({
 var WelcomeView = new WelcomeClass();
 var MapView     = new MapViewClass();
 var TourView    = new TourClass();
+var SettingView = new SettingsClass();
 
 vent.on('thinking', function(){
   $('#thinkingbox').show();

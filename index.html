@@ -34,10 +34,9 @@
   <script type="text/javascript" src="js/lib/jquery.geocomplete.min.js"></script>
   <script type="text/javascript" src="js/client.js" defer></script>
   <script type="text/javascript" src="js/lib/dygraph.js"></script>
-  <link rel="stylesheet" href="stylesheets/screen.css">
-
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
   <link rel="stylesheet" href="/stylesheets/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="stylesheets/screen.css">
   <script src="/js/lib/bootstrap.min.js"></script>
 </head>
 <body>
@@ -69,9 +68,25 @@
     </div>
   </div>
 
-    <div id="mapview">
-      <div id="map-canvas"></div>
+  <div id="settings-pop">
+    <img src="img/gear.png">
+  </div>
+
+
+
+  <div id="mapview">
+    <div id="map-canvas"></div>
+  </div>
+
+  <div id="settings">
+    <div class="closebox">X</div>
+    <h1>Season</h1>
+    <div class="btn-group" data-toggle="buttons" id="seasonsel" style="margin-left:10px">
+      <label class="btn btn-primary active"><input type="radio" name="options" checked>Annual</label>
+      <label class="btn btn-primary"><input type="radio" name="options">Summer</label>
+      <label class="btn btn-primary"><input type="radio" name="options">Winter</label>
     </div>
+  </div>
 
   <div style="display:none">
 
