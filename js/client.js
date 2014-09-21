@@ -39,7 +39,7 @@ var DetailsClass = Backbone.View.extend({
 
   getDetails: function(){
     var self = this;
-    vent.trigger('thinking', 14);
+    vent.trigger('thinking', 8.5); //Time to fetch
 
     var markerpos = MapView.click_marker.getPosition();
     var lat = markerpos.lat();
@@ -286,7 +286,7 @@ var MapViewClass = Backbone.View.extend({
     var lat       = markerpos.lat();
     var lon       = markerpos.lng();
 
-    vent.trigger('thinking', 6);
+    vent.trigger('thinking', 3.4);
 
     var img_data_url;
     if(self.question=='goingto')
