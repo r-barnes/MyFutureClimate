@@ -68,6 +68,11 @@ Media
 =====
 Category finals presentation is [here](https://www.youtube.com/watch?v=h_GzzvIa4QY&list=UU3ofNKrKZBn8AvFeG3A6w6A) and starts at 29:17.
 
+Links
+=====
+[Geeklist Git Repo](https://git.geekli.st/rbarnes/myfutureclimate/)
+[Geeklist Project Page](https://geekli.st/hackathon/hack4good-06/project/5414c07d1c363f370480641f)
+[Geeklist Achievement Card](https://geekli.st/rbarnes/we-built-my-future-climate-at-geeklist-hack4good-06-in-virtual-locations)
 
 Awards
 ======
