@@ -115,14 +115,15 @@ body {
 
 #welcomeview {
   position:         fixed;
-  top:              0;
-  left:             0;
-  width:            100%;
-  height:           100%;
+  top:              10px;
+  left:             10px;
+  width:            400px;
+  height:           220px;
   overflow:         scroll;
   z-index:          100;
   background-color: rgba(0,0,0,0.5);
-  padding-top:      100px;
+  overflow:         hidden;
+  border-radius:    20px;
 }
 
 #tourview {
@@ -148,10 +149,8 @@ body {
 }
 
 #map-canvas{
-  width:         80%;
-  height:        400px;
-  margin:        0 auto;
-  border-radius: 20px;
+  width:         100%;
+  height:        100%;
 }
 
 #footer {
@@ -181,4 +180,9 @@ body {
   right:     5px;
   top:       30px;
   font-size: 15pt;
+}
+
+#yearsel label {
+  font-weight:bold;
+  font-size:15pt;
 }

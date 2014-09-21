@@ -45,8 +45,27 @@ var MapViewClass = Backbone.View.extend({
 
     var mapOptions = {
       zoom: 4,
-      center: minneapolis
-    };
+      center: minneapolis,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          position: google.maps.ControlPosition.BOTTOM_CENTER
+      },
+      panControl: false,
+      panControlOptions: {
+          position: google.maps.ControlPosition.TOP_RIGHT
+      },
+      zoomControl: true,
+      zoomControlOptions: {
+          style: google.maps.ZoomControlStyle.LARGE,
+          position: google.maps.ControlPosition.RIGHT_CENTER
+      },
+      scaleControl: true,
+      streetViewControl: false,
+      streetViewControlOptions: {
+          position: google.maps.ControlPosition.TOP_RIGHT
+      }
+    }
 
     self.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
@@ -73,6 +92,7 @@ var MapViewClass = Backbone.View.extend({
   goYear: function(year){
     this.year = year;
     this.setMapGrid();
+    //this.setTrendGraph();
   },
 
   centerMap: function(pos){
@@ -116,6 +136,24 @@ var MapViewClass = Backbone.View.extend({
 
   showClimateOverlay: function(year){
     this.climateoverlays[year].setMap(this.map);
+  },
+
+  setTrendGraph: function(){
+    var markerpos = this.click_marker.getPosition();
+    var lat = markerpos.lat();
+    var lon = markerpos.lng();
+    var url = '/summary/'+lat+'/'+lon;
+    $.getJSON(url, [], function(data){
+      console.log(data);
+      new Dygraph(document.getElementById("trendgraph"), data, {
+        legend: 'always',
+        title: 'NYC vs. SF',
+        showRoller: true,
+        rollPeriod: 14,
+        customBars: true,
+        ylabel: 'Temperature (F)',
+      });
+    });
   },
 
   setMapGrid: function(){
