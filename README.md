@@ -6,13 +6,24 @@ complicated models of climate change by calculating how similar a location's
 climate is to every other location. The location of this "climate analog" can
 then be tracked forward and backward through time.
 
+This project should be useful to policy and land management plannersin helping
+them plan mitigation and adaptation strategies. It should also be useful to the
+general public in helping them understand what effects climate change will have
+on their local area.
+
 
 TODO
 ===============
- * Add year indicator to display
- * Make display mobile friendly
- * Separate server map generation code into a separate Python script
- * Write a new server in Node.js to serve up the images produced by the above
+ * Ensure things are at least tablet-friendly
+ * Set up a batch script to perform pre-caching for all major cities
+ * Improve design/layout
+ * Add in sea level rise
+ * Add in a metric for extreme climate events
+ * Use a multi-ensemble average for the projections
+ * Use an adaptive strategy for judging similarity based on region
+ * Bring service conf scripts into repo
+ * Bring nginx conf scripts into repo
+ * Add global finalist media
 
 
 Getting Started
@@ -21,9 +32,8 @@ Getting Started
 You'll need some basic things to get started. The follow commands will install
 the environment you'll need to run our code.
 
-    apt-get install python-scipy python-h5py python-matplotlib python-redis redis-server python-pip python-routes libhdf5-dev
+    apt-get install python-scipy python-h5py python-matplotlib python-redis redis-server python-pip python-routes libhdf5-dev python-pandas
     pip install cherrypy==3.3.0
-    pip install python-magic
     pip install h5py
     apt-get install nginx
 
@@ -57,3 +67,8 @@ ftp://srtm.csi.cgiar.org/SRTM_V41/SRTM_Data_GeoTiff/
 Media
 =====
 Category finals presentation is [here](https://www.youtube.com/watch?v=h_GzzvIa4QY&list=UU3ofNKrKZBn8AvFeG3A6w6A) and starts at 29:17.
+
+
+Awards
+======
+This project was the grand finals winner of the Hack4Good 0.6 Hack Against Climate Change event.
