@@ -6,27 +6,6 @@
 @import "compass/reset";
 @import "compass/css3/transition";
 
-#thinkingbox {
-  position:       fixed;
-  width:          60px;
-  height:         60px;
-  left:           50%;
-  margin-left:    -40px;
-  top:            30%;
-  background:     rgba(0,0,0,0.8);
-  border-radius:  10px;
-  text-align:     center;
-  display:        none;
-  z-index:        10000;
-  pointer-events: none;
-
-  img {
-    margin-top: 15px;
-    width:      30px;
-    height:     30px;
-  }
-}
-
 #thinkprogress {
   position:         fixed;
   width:            30%;

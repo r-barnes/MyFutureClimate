@@ -39,7 +39,7 @@ var DetailsClass = Backbone.View.extend({
 
   getDetails: function(){
     var self = this;
-    vent.trigger('thinking');
+    vent.trigger('thinking', 13);
 
     var markerpos = MapView.click_marker.getPosition();
     var lat = markerpos.lat();
@@ -475,11 +475,3 @@ var SettingView  = new SettingsClass();
 var AboutView    = new AboutClass();
 var DetailsView  = new DetailsClass();
 var ProgressView = new ProgressClass();
-/*
-vent.on('thinking', function(){
-  $('#thinkingbox').show();
-});
-
-vent.on('donethinking', function(){
-  $('#thinkingbox').hide();
-});*/
