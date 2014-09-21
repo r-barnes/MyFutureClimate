@@ -46,18 +46,24 @@
 
     <h2>Explanation</h2>
     <p>Climates can be loosely defined as distributions of temperature and
-    precipitation at different times of the year. Averaging these values over a
-    decade gives a snapshot of a location's climate.</p>
+    precipitation at different times of the year. Averaging these values over two
+    decades gives a snapshot of a location's climate.</p>
 
-    <p>MyFutureClimate helps people easily visualize where the current climate of any
-    location will go to in the future. Alternatively, it can visualize where a
-    location's future climate will come from.</p>
+    <p>MyFutureClimate helps people easily visualize what present locations have
+    climates similar to the future climate of any location of interest. This is
+    invaluable for resource and land management planning. The trees, animals, and
+    agriculture of a landscape are all closely tied to its climate. Therefore,
+    being able to predict future analogues to present climate allows land managers
+    to transplant species to preserve them from extinction and prevent invasives
+    from taking holder. Similarly, farmers can educate themselves about the crops
+    they will be managing in the future.</p>
 
     <p>Climate models are run using different emissions scenarios, representing the
     different paths our future might take depending on how long it takes us to
-    control our carbon emissions. MFC uses the RCP 6.0 scenario.</p>
+    control our carbon emissions. MFC uses the RCP 6.0 scenario. We plan to
+    make more scenarios available in the future.</p>
 
-    <p style="text-align:center"><img src="/img/emissions.png" style="width:75%"></p>
+    <p style="display:block;margin:0 auto;width:75%;background-color:rgba(255,255,255,0.2);border-radius:20px"><img src="/img/emissions.png" style="width:100%"></p>
 
     <p>MFC uses data from Global Circulation Models (available <a href="http://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">here</a>) to develop a Euclidean distance between a reference grid cell's climate and every other grid cell. For the demo here we have used only the CESM1-CAM5 model. With more time and a more robust caching system it would be possible to use multi-ensemble methods to produce better estimates. Nonetheless, the distance calculation is performed as follows:</p>
     <ol>
@@ -79,7 +85,7 @@
     <li>Rebecca Orrison</li>
     <li>Kathleen Thurmes</li>
     <li>Charlie Lehnen</li>
-    <li>Katie Thompson (@GlobalWaterGeek)</li>
+    <li>Katie Thompson (<a href="https://twitter.com/globalwatergeek">@GlobalWaterGeek</a>)</li>
     <li>Dr. Lee Frelich (<a href="http://www.forestry.umn.edu/People/Frelich/">Website</a>)</li>
     </ul>
 
@@ -135,6 +141,13 @@
     <div style="display:block;margin:0 auto;width:200px;font-weight:bold;" class="btn btn-primary aboutopen">About This Project</div>
   </div>
 
+  <div id="getdetails">+</div>
+
+  <div id="details">
+    <div class="closebox">X</div>
+    <div id="trendgraph" style="width:80%;height:300px;margin-top:50px"></div>
+  </div>
+
   <div id="futurecity">
     Your future climate will be
     <br><span id="tempcomp">____</span> and <span id="prcpcomp">____</span>
@@ -142,20 +155,8 @@
   </div>
 
   <div style="display:none">
-
-
-      <h1 class="text-center" style="color:white">will be like the highlighted area is today</h1>
-
       <h3 class="text-center" style="color:white">(<span id="origtemp"></span>&deg;C&#8594;<span id="newtemp"></span>&deg;C, <span id="origprcp"></span><sup>mm</sup>/<sub>yr</sub>&#8594;<span id="newprcp"></span><sup>mm</sup>/<sub>yr</sub>)</h3>
 
-    <hr>
-
-    <div id="trendgraph" style="width:100%;height:300px"></div>
-
-    <p>Further details are available <a href="/about.html">here</a>.</p>
-
-    <p style="margin-top:2in">&nbsp;</p>
-
-    </div>
+  </div>
 </body>
 </html>

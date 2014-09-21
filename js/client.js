@@ -25,6 +25,80 @@ var AboutClass = Backbone.View.extend({
   }
 });
 
+var DetailsClass = Backbone.View.extend({
+  el: '#details',
+
+  events: {
+    'click .closebox': 'close'
+  },
+
+  initialize: function(){
+    var self = this;
+    $('#getdetails').click(self.getDetails.bind(this));
+  },
+
+  getDetails: function(){
+    var self = this;
+    vent.trigger('thinking');
+
+    var markerpos = MapView.click_marker.getPosition();
+    var lat = markerpos.lat();
+    var lon = markerpos.lng();
+    var url = '/summary/'+lat+'/'+lon;
+
+    $.getJSON(url, [], self.gotDetails);
+  },
+
+  gotDetails: function(data){
+    var self = this;
+
+    vent.trigger('donethinking');
+
+    data = _.map(data, function(x){
+      x[0] = new Date(x[0]*1000); //Convert UNIX timestamp to date
+      return x;
+    });
+
+    data = _.filter(data, function(x){
+      return (x[1]!=null && x[2]!=null);
+    });
+
+    console.log(data);
+
+    $('#details').show();
+
+    self.graph = new Dygraph(document.getElementById("trendgraph"), data, {
+      legend:              'always',
+      ylabel:              'Temperature (C)',
+      y2label:             'Precipitation (mm/dy)',
+      labels:              ['Date','Temp','Prcp'],
+      series:              {'Prcp': {axis:'y2'}},
+      axisLabelColor:      'white',
+      axisLineColor:       'white',
+      colors:              ['red','blue'],
+      strokeWidth:         5,
+      highlightCircleSize: 8,
+      axes:                {
+        y: {
+          // set axis-related properties here
+          drawGrid:         false,
+          independentTicks: false
+        },
+        y2: {
+          // set axis-related properties here
+          labelsKMB:        true,
+          drawGrid:         true,
+          independentTicks: true
+        }
+      }
+    });
+  },
+
+  close: function(){
+    this.$el.hide();
+  }
+});
+
 var SettingsClass = Backbone.View.extend({
   el: '#settings',
 
@@ -141,7 +215,6 @@ var MapViewClass = Backbone.View.extend({
   goYear: function(year){
     this.year = year;
     this.setMapGrid();
-    //this.setTrendGraph();
   },
 
   centerMap: function(pos){
@@ -185,24 +258,6 @@ var MapViewClass = Backbone.View.extend({
 
   showClimateOverlay: function(year){
     this.climateoverlays[year].setMap(this.map);
-  },
-
-  setTrendGraph: function(){
-    var markerpos = this.click_marker.getPosition();
-    var lat = markerpos.lat();
-    var lon = markerpos.lng();
-    var url = '/summary/'+lat+'/'+lon;
-    $.getJSON(url, [], function(data){
-      console.log(data);
-      new Dygraph(document.getElementById("trendgraph"), data, {
-        legend: 'always',
-        title: 'NYC vs. SF',
-        showRoller: true,
-        rollPeriod: 14,
-        customBars: true,
-        ylabel: 'Temperature (F)',
-      });
-    });
   },
 
   setMapGrid: function(){
@@ -369,6 +424,7 @@ var MapView     = new MapViewClass();
 var TourView    = new TourClass();
 var SettingView = new SettingsClass();
 var AboutView   = new AboutClass();
+var DetailsView = new DetailsClass();
 
 vent.on('thinking', function(){
   $('#thinkingbox').show();

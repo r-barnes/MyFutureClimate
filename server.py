@@ -393,6 +393,8 @@ class ServerRoot():
 
     #code.interact(local=locals())
 
+    redisclient.set(key, json.dumps(out))
+
     return out
 
     ##Generating average climate

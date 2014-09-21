@@ -182,7 +182,7 @@ body {
   font-size:15pt;
 }
 
-#settings-pop {
+#settings-pop, #getdetails {
   position:         fixed;
   right:            10px;
   top:              10px;
@@ -193,6 +193,7 @@ body {
   text-align:       center;
   border-radius:    10px;
   cursor:           pointer;
+  color:            white;
   img {
     display:    block;
     margin:     0 auto;
@@ -202,11 +203,18 @@ body {
   }
 }
 
-#settings-pop:hover{
+#settings-pop:hover, #getdetails:hover{
   background-color: rgba(128,0,0,0.5);
 }
 
-#settings, #about {
+#getdetails {
+  top:         70px;
+  line-height: 50px;
+  font-size:   50px;
+  text-align:  center;
+}
+
+#settings, #about, #details {
   background-color: rgba(0,0,0,0.8);
   position:         fixed;
   left:             30px;
@@ -230,6 +238,10 @@ body {
   .closebox:hover {
     color:red;
   }
+}
+
+#details {
+  //background-color: rgba(0,0,0,0.);
 }
 
 #about {
@@ -262,4 +274,20 @@ h1 {
   .cityname {
     font-size: 20pt;
   }
+}
+
+#trendgraph {
+  display: block;
+  margin:  0 auto;
+  width:   80%;
+}
+
+.dygraph-legend {
+  background-color: rgba(255,255,255,0.4) !important;
+  border-radius:    5px;
+  top:              -25px !important;
+  width:            100% !important;
+  left:             0 !important;
+  text-align:       center !important;
+  font-size:        15pt !important;
 }
