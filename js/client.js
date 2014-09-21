@@ -286,7 +286,7 @@ var MapViewClass = Backbone.View.extend({
     var lat       = markerpos.lat();
     var lon       = markerpos.lng();
 
-    vent.trigger('thinking');
+    vent.trigger('thinking', 6);
 
     var img_data_url;
     if(self.question=='goingto')
@@ -419,17 +419,67 @@ var WelcomeClass = Backbone.View.extend({
 
 
 
-var WelcomeView = new WelcomeClass();
-var MapView     = new MapViewClass();
-var TourView    = new TourClass();
-var SettingView = new SettingsClass();
-var AboutView   = new AboutClass();
-var DetailsView = new DetailsClass();
+var ProgressClass = Backbone.View.extend({
+  el: '#thinkprogress',
 
+  events: {
+  },
+
+  initialize: function(){
+    var self = this;
+    self.listenTo(vent, 'thinking', self.startThinking, self);
+    self.listenTo(vent, 'donethinking', self.stopThinking, self);
+    self.pid = false;
+  },
+
+  startThinking: function(duration_seconds){
+    var self = this;
+
+    if(self.pid)
+      clearInterval(self.pid);
+
+    $('#thinkprogress').show();
+    self.interval = duration_seconds*1000/100.0;
+    self.progress = 0;
+    self.pid      = setInterval(self.advanceThinking.bind(this), self.interval);
+    console.log(self.interval);
+  },
+
+  advanceThinking: function(){
+    var self = this;
+
+    if(self.progress==100){
+      clearInterval(self.pid);
+      self.pid = false;
+      return;
+    }
+
+    self.progress += 1;
+    this.$el.find('.theprogress').css('width',self.progress+'%');
+  },
+
+  stopThinking: function(){
+    $('#thinkprogress').hide();
+    clearInterval(this.pid);
+    this.pid = false;
+  }
+});
+
+
+
+
+var WelcomeView  = new WelcomeClass();
+var MapView      = new MapViewClass();
+var TourView     = new TourClass();
+var SettingView  = new SettingsClass();
+var AboutView    = new AboutClass();
+var DetailsView  = new DetailsClass();
+var ProgressView = new ProgressClass();
+/*
 vent.on('thinking', function(){
   $('#thinkingbox').show();
 });
 
 vent.on('donethinking', function(){
   $('#thinkingbox').hide();
-});
+});*/
