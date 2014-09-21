@@ -31,6 +31,10 @@
 THINKING SPINNER
 ==========================================*/
 
+html, body {
+  overflow:hidden;
+}
+
 .thinking-spinner {
   opacity:           .7;
   -webkit-animation: rotate 1s infinite steps(12);
@@ -202,7 +206,7 @@ body {
   background-color: rgba(128,0,0,0.5);
 }
 
-#settings {
+#settings, #about {
   background-color: rgba(0,0,0,0.8);
   position:         fixed;
   left:             30px;
@@ -213,6 +217,7 @@ body {
   border-radius:    20px;
   display:          none;
   padding:          10px;
+  color:            white;
   .closebox {
     position:    absolute;
     right:       10px;
@@ -227,6 +232,10 @@ body {
   }
 }
 
+#about {
+  overflow: scroll;
+}
+
 h1 {
   color:white;
 }
@@ -234,4 +243,23 @@ h1 {
 #seasonsel label {
   font-size: 20pt;
   color:     white;
+}
+
+#futurecity {
+  position:         fixed;
+  width:            450px;
+  left:             50%;
+  margin-left:      -225px;
+  bottom:           20px;
+  height:           95px;
+  background-color: rgba(0,0,0,0.5);
+  color:            white;
+  z-index:          100;
+  border-radius:    20px;
+  text-align:       center;
+  pointer-events:   none;
+  display:          none;
+  .cityname {
+    font-size: 20pt;
+  }
 }

@@ -40,6 +40,51 @@
   <script src="/js/lib/bootstrap.min.js"></script>
 </head>
 <body>
+  <div id="about">
+    <div class="closebox">X</div>
+    <p>Repo is <a href="https://git.geekli.st/rbarnes/myfutureclimate">here</a>.</p>
+
+    <h2>Explanation</h2>
+    <p>Climates can be loosely defined as distributions of temperature and
+    precipitation at different times of the year. Averaging these values over a
+    decade gives a snapshot of a location's climate.</p>
+
+    <p>MyFutureClimate helps people easily visualize where the current climate of any
+    location will go to in the future. Alternatively, it can visualize where a
+    location's future climate will come from.</p>
+
+    <p>Climate models are run using different emissions scenarios, representing the
+    different paths our future might take depending on how long it takes us to
+    control our carbon emissions. MFC uses the RCP 6.0 scenario.</p>
+
+    <p style="text-align:center"><img src="/img/emissions.png" style="width:75%"></p>
+
+    <p>MFC uses data from Global Circulation Models (available <a href="http://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html">here</a>) to develop a Euclidean distance between a reference grid cell's climate and every other grid cell. For the demo here we have used only the CESM1-CAM5 model. With more time and a more robust caching system it would be possible to use multi-ensemble methods to produce better estimates. Nonetheless, the distance calculation is performed as follows:</p>
+    <ol>
+    <li>Find the mean temperature of the home grid cell over the reference period. Call this T<sub>ref</sub>.</li>
+    <li>Find the mean temperatures of all grid cells in the period of interest. Call this T<sub>int</sub>.</li>
+    <li>Find the standard deviations of all grid cells in the reference period. Call this S<sub>ref</sub>.</li>
+    <li>Perform the following: ((T<sub>int</sub>-T<sub>ref</sub>)/S<sub>ref</sub>)<sup>2</sup>.</li>
+    <li>Sum together a number of these calculations for different months and climate variables (e.g. precipitation).</li>
+    <li>Take a square root.</li>
+    <li>Choose a cut-off value beyond which the climate is considered dissimilar.</li>
+    <!--<li>Display result as a linear colormap:
+      <div style="text-align:center">Like Home <img style="vertical-align:middle" src="/img/colorscale.png"> Unlike Home</div>
+    </li>-->
+    </ol>
+
+    <h2>Contributors</h2>
+    <ul>
+    <li>Richard Barnes (<a href="http://rbarnes.org">Website</a>)</li>
+    <li>Rebecca Orrison</li>
+    <li>Kathleen Thurmes</li>
+    <li>Charlie Lehnen</li>
+    <li>Katie Thompson (@GlobalWaterGeek)</li>
+    <li>Dr. Lee Frelich (<a href="http://www.forestry.umn.edu/People/Frelich/">Website</a>)</li>
+    </ul>
+
+  </div>
+
   <div id="thinkingbox">
     <img class="thinking-spinner" src="img/thinking.png">
   </div>
@@ -86,13 +131,21 @@
       <label class="btn btn-primary"><input type="radio" name="options">Summer</label>
       <label class="btn btn-primary"><input type="radio" name="options">Winter</label>
     </div>
+    <br>
+    <div style="display:block;margin:0 auto;width:200px;font-weight:bold;" class="btn btn-primary aboutopen">About This Project</div>
+  </div>
+
+  <div id="futurecity">
+    Your future climate will be
+    <br><span id="tempcomp">____</span> and <span id="prcpcomp">____</span>
+    <br>like <span class="cityname">____</span> is today
   </div>
 
   <div style="display:none">
 
 
       <h1 class="text-center" style="color:white">will be like the highlighted area is today</h1>
-      <h3 class="text-center" style="color:white">(<span id="tempcomp"></span>, <span id="prcpcomp"></span>)</h3>
+
       <h3 class="text-center" style="color:white">(<span id="origtemp"></span>&deg;C&#8594;<span id="newtemp"></span>&deg;C, <span id="origprcp"></span><sup>mm</sup>/<sub>yr</sub>&#8594;<span id="newprcp"></span><sup>mm</sup>/<sub>yr</sub>)</h3>
 
     <hr>
@@ -104,21 +157,5 @@
     <p style="margin-top:2in">&nbsp;</p>
 
     </div>
-
-  <div id="tourview">
-    <h1>About</h1>
-    <p>Where will your home's climate be in the future?</p>
-    <p>What current climate will be your home's future climate?</p>
-    <p>To find out:</p>
-    <ol>
-      <li>Drag the pin to your home.</li>
-      <li>Drag the bottom slider to a year.</li>
-    </ol>
-    <p>The colors tell you how much the future climate is like your current climate:</p>
-    <div style="text-align:center">Like Home <img style="vertical-align:middle" src="/img/colorscale.png"> Unlike Home</div>
-    <p>Areas without color are completely unlike your current climate.</p>
-    <p>More details are available <a href="about.html">here</a>.</p>
-    <p><button id="closetour" style="font-size:30pt">Okay!</button></p>
-  </div>
 </body>
 </html>

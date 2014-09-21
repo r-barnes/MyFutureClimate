@@ -13,11 +13,24 @@ var TourClass = Backbone.View.extend({
   }
 });
 
+var AboutClass = Backbone.View.extend({
+  el: '#about',
+
+  events: {
+    'click .closebox': 'close'
+  },
+
+  close: function(){
+    this.$el.hide();
+  }
+});
+
 var SettingsClass = Backbone.View.extend({
   el: '#settings',
 
   events: {
     'click .closebox':  'close',
+    'click .aboutopen': 'aboutopen'
   },
 
   initialize: function(){
@@ -32,6 +45,11 @@ var SettingsClass = Backbone.View.extend({
       else if (theseason=='Winter')
         MapView.months = MapView.winter;
     });
+  },
+
+  aboutopen: function(){
+    this.$el.hide();
+    $('#about').show();
   },
 
   close: function(){
@@ -80,7 +98,7 @@ var MapViewClass = Backbone.View.extend({
       mapTypeControl: true,
       mapTypeControlOptions: {
           style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-          position: google.maps.ControlPosition.BOTTOM_CENTER
+          position: google.maps.ControlPosition.BOTTOM_LEFT
       },
       panControl: false,
       panControlOptions: {
@@ -199,6 +217,8 @@ var MapViewClass = Backbone.View.extend({
     else if(typeof(year)!=='number')
       return;
 
+    self.hideClimateOverlays();
+    $('#futurecity').hide();
 
 //Deprecated client-side caching
 /*    if(typeof(self.climateoverlays[year])!=='undefined'){
@@ -224,14 +244,10 @@ var MapViewClass = Backbone.View.extend({
       var img     = new Image();
       img.src = img_url;
 
-      console.log('Data raw', data);
-
       if(data.sw[1]>180)
         data.sw[1] = data.sw[1]-360;
       if(data.ne[1]>180)
         data.ne[1] = data.ne[1]-360;
-
-      console.log('Data fixed', data);
 
       if(data.orig_temp>data.new_temp)
         $('#tempcomp').html('colder');
@@ -242,6 +258,14 @@ var MapViewClass = Backbone.View.extend({
         $('#prcpcomp').html('drier');
       else
         $('#prcpcomp').html('wetter');
+
+      if(data.city){
+        $('.cityname').html(data.city);
+      } else {
+        $('.cityname').html('nowhere');
+      }
+
+      $('#futurecity').show();
 
       $('#origtemp').html(Math.round(data.orig_temp));
       $('#origprcp').html(Math.round(365*data.orig_prcp));
@@ -344,6 +368,7 @@ var WelcomeView = new WelcomeClass();
 var MapView     = new MapViewClass();
 var TourView    = new TourClass();
 var SettingView = new SettingsClass();
+var AboutView   = new AboutClass();
 
 vent.on('thinking', function(){
   $('#thinkingbox').show();
