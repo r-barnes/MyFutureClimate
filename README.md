@@ -67,6 +67,8 @@ ftp://srtm.csi.cgiar.org/SRTM_V41/SRTM_Data_GeoTiff/
 Media
 =====
 Category finals presentation is [here](https://www.youtube.com/watch?v=h_GzzvIa4QY&list=UU3ofNKrKZBn8AvFeG3A6w6A) and starts at 29:17.
+Hack4Good finalist announcement is [here](http://blog.geekli.st/post/98065680547/the-winning-teams-of-the-geeklist-hack4good-against).
+Hack4Good category finalist announcement is [here](http://blog.geekli.st/post/97978462607/announcing-12-challenge-theme-winners-hackers-choice).
 
 Links
 =====
