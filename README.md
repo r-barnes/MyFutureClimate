@@ -59,10 +59,6 @@ The prototype app uses the CESM1-CAM5 model. Later iterations will use a multi-e
 Notes:
  * 0.5 degree images are 720x278 pixels.
 
-Elevation Data (if we do something we sea level rise)
------------------------------------------------------
-ftp://srtm.csi.cgiar.org/SRTM_V41/SRTM_Data_GeoTiff/
-
 
 Media
 =====
